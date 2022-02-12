@@ -1,4 +1,4 @@
-package com.mallang.bobby.external.naver.response;
+package com.mallang.bobby.external.naver.response.news;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.dto;
+package com.mallang.bobby.dto;
 
 import lombok.Builder;
 import lombok.Getter;
