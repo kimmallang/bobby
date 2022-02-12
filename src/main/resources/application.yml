@@ -1,3 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.99.103:3306/bobby
+    username: root
+    password: 1225
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      format_sql: true
+      ddl-auto: none
 api:
   naver:
     client-id: 4phPhh0_MG0qX51vklfy
