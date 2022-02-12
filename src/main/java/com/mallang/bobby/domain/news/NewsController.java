@@ -1,10 +1,10 @@
-package com.mallang.bobby.controller.mallang;
+package com.mallang.bobby.domain.news;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mallang.bobby.domain.dto.ResponseDto;
+import com.mallang.bobby.dto.ResponseDto;
 import com.mallang.bobby.external.naver.NaverApi;
 import com.mallang.bobby.external.naver.request.news.NewsRequest;
 import com.mallang.bobby.external.naver.request.news.NewsRequestSort;

@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.mallang.bobby.domain.dto.ResponseDto;
-import com.mallang.bobby.domain.dto.ResponseStatus;
+import com.mallang.bobby.dto.ResponseDto;
+import com.mallang.bobby.dto.ResponseStatus;
 
 @RestControllerAdvice
 class ApiExceptionHandler {
