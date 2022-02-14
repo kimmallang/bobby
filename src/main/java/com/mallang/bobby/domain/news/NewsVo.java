@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewsVo {
 	private Long id;
-	private String query;
+	private NewsRequestQuery query;
 	private String title;
 	private String originalLink;
 	private String naverLink;

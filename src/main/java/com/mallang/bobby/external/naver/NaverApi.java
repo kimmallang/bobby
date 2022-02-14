@@ -11,9 +11,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.mallang.bobby.external.naver.request.news.NewsRequest;
 import com.mallang.bobby.external.naver.response.news.NewsResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Setter
 @Component
 @RequiredArgsConstructor
 public class NaverApi {
