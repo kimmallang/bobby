@@ -17,7 +17,7 @@ public class NewsService {
 	private final NewsApiService newsApiService;
 	private final NewsRepository newsRepository;
 
-	public List<NewsVo> save(NewsRequestQuery newsRequestQuery) {
+	public List<NewsVo> saveFromApi(NewsRequestQuery newsRequestQuery) {
 		final List<NewsVo> newsVoList = newsApiService.get(newsRequestQuery);
 		final List<News> newsList = newsVoList.stream()
 			.map(newsVo -> modelMapper.map(newsVo, News.class))

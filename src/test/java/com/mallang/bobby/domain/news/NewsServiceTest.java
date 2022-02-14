@@ -74,8 +74,8 @@ public class NewsServiceTest {
 	}
 
 	@Test
-	void saveAll() {
-		List<NewsVo> savedNewsList = newsService.save(NewsRequestQuery.IT);
+	void saveFromApi() {
+		List<NewsVo> savedNewsList = newsService.saveFromApi(NewsRequestQuery.IT);
 
 		assertTrue(savedNewsList.size() > 0, "뉴스 데이터 최신화 실패");
 	}
