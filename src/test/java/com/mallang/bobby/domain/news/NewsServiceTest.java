@@ -80,7 +80,7 @@ public class NewsServiceTest {
 
 	@Test
 	void saveFromApi() {
-		List<NewsVo> savedNewsList = newsService.saveFromApi(NewsRequestQuery.IT);
+		List<NewsVo> savedNewsList = newsService.refreshFromApi(NewsRequestQuery.IT);
 
 		assertTrue(savedNewsList.size() > 0, "뉴스 데이터 최신화 실패");
 	}
