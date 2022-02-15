@@ -22,7 +22,7 @@ public class NewsApiService {
 		NewsResponse newsResponse = naverApi.getNews(NewsRequest.builder()
 			.query(newsRequestQuery.getQuery())
 			.sort(NewsRequestSort.sim)
-			.display(10)
+			.display(100)
 			.start(1)
 			.build());
 

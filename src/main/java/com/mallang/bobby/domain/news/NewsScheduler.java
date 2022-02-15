@@ -23,7 +23,7 @@ public class NewsScheduler {
 			newsService.saveFromApi(NewsRequestQuery.SW);
 			log.info("[뉴스] 뉴스 조회 및 저장 완료");
 		} catch (Exception e) {
-			log.error("[뉴스] 뉴스 조회 및 저장 실패");
+			log.error("[뉴스] 뉴스 조회 및 저장 실패", e);
 		}
 	}
 }

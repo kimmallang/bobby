@@ -7,4 +7,5 @@ import com.mallang.bobby.domain.news.entity.News;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
+	void deleteAllByQuery(String query);
 }
