@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ public class NewsService {
 	private static final int pagingSize = 20;
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
+	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
 	public List<NewsVo> refreshFromApi(NewsRequestQuery newsRequestQuery) {
 		final List<NewsVo> newsVoList = newsApiService.get(newsRequestQuery);
@@ -44,6 +47,7 @@ public class NewsService {
 			.collect(Collectors.toList());
 	}
 
+	@Cacheable(value = "news")
 	public NewsResponse get(NewsRequestQuery newsRequestQuery, int page) {
 		final Pageable pageable = PageRequest.of((page - 1), pagingSize, sortByIdDesc);
 		final Page<News> newsPage = newsRepository.findAllByQuery(newsRequestQuery.getQuery(), pageable);

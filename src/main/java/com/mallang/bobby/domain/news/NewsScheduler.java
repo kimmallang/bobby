@@ -15,7 +15,7 @@ public class NewsScheduler {
 	private final NewsService newsService;
 
 	@Scheduled(cron = "0 0 */1 * * *")
-	public void test() {
+	public void refreshFromApi() {
 		try {
 			log.info("[뉴스] 뉴스 조회 및 저장 시작");
 			newsService.refreshFromApi(NewsRequestQuery.IT);
