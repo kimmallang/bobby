@@ -16,6 +16,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.mallang.bobby.domain.news.repository.NewsRepository;
+import com.mallang.bobby.domain.news.service.NewsApiService;
+import com.mallang.bobby.domain.news.service.NewsService;
+import com.mallang.bobby.domain.news.vo.NewsRequestQuery;
+import com.mallang.bobby.domain.news.vo.NewsVo;
 import com.mallang.bobby.external.naver.NaverApi;
 
 @DataJpaTest

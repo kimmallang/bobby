@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.news;
+package com.mallang.bobby.domain.news.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
