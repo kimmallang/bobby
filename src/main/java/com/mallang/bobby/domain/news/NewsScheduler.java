@@ -14,13 +14,20 @@ import lombok.extern.slf4j.Slf4j;
 public class NewsScheduler {
 	private final NewsService newsService;
 
-	@Scheduled(cron = "0 0 */1 * * *")
+	//	@Scheduled(cron = "0 0 */1 * * *")
+	@Scheduled(cron = "*/10 * * * * *")
 	public void test() {
 		try {
 			log.info("[뉴스] 뉴스 조회 및 저장 시작");
 			newsService.refreshFromApi(NewsRequestQuery.IT);
-			newsService.refreshFromApi(NewsRequestQuery.DEVELOPER);
-			newsService.refreshFromApi(NewsRequestQuery.SW);
+			newsService.refreshFromApi(NewsRequestQuery.DUNAMU);
+			newsService.refreshFromApi(NewsRequestQuery.NAVER);
+			newsService.refreshFromApi(NewsRequestQuery.KAKAO);
+			newsService.refreshFromApi(NewsRequestQuery.LINE);
+			newsService.refreshFromApi(NewsRequestQuery.COUPANG);
+			newsService.refreshFromApi(NewsRequestQuery.BAEMIN);
+			newsService.refreshFromApi(NewsRequestQuery.DANGKGEUN);
+			newsService.refreshFromApi(NewsRequestQuery.TOSS);
 			log.info("[뉴스] 뉴스 조회 및 저장 완료");
 		} catch (Exception e) {
 			log.error("[뉴스] 뉴스 조회 및 저장 실패", e);
