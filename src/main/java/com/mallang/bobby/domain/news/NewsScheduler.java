@@ -14,8 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NewsScheduler {
 	private final NewsService newsService;
 
-	//	@Scheduled(cron = "0 0 */1 * * *")
-	@Scheduled(cron = "*/10 * * * * *")
+	@Scheduled(cron = "0 0 */1 * * *")
 	public void test() {
 		try {
 			log.info("[뉴스] 뉴스 조회 및 저장 시작");
