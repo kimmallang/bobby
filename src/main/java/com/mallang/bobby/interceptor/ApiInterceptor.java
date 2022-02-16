@@ -13,7 +13,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class ApiInterceptor implements HandlerInterceptor {
 	final String[] allowedDomain = new String[] {
 		"http://local.bobby.com:8080",
-		"https://mallang.herokuapp.com"
+		"https://mallang.herokuapp.com",
+		"https://bobby-djk.herokuapp.com"
 	};
 
 	@Override
