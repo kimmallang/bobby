@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.99.103:3306/bobby
-    username: root
-    password: 1225
+    url: jdbc:mysql://djpx423gm4maamuh:yb9skpv93bxqtsis@lfmerukkeiac5y5w.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/n309wozotlvmsfow
+    username: djpx423gm4maamuh
+    password: yb9skpv93bxqtsis
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
@@ -15,3 +15,15 @@ api:
     client-secret: Q4A3CPGjq1
     url:
       news: https://openapi.naver.com/v1/search/news.json
+
+# local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.99.103:3306/bobby
+    username: root
+    password: 1225
