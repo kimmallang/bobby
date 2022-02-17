@@ -5,14 +5,15 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.mallang.bobby.exception.NotAllowedDomainException;
+
 public class ApiInterceptor implements HandlerInterceptor {
 	final String[] allowedDomain = new String[] {
-		"http://local.bobby.com:8080",
+		"http://localhost:3000",
+		"http://localhost:8080",
 		"https://mallang.herokuapp.com",
 		"https://bobby-djk.herokuapp.com"
 	};
@@ -20,11 +21,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws NoHandlerFoundException {
 		if (!isAllowedDomain(request)) {
-			final String httpMethod = request.getMethod();
-			final String requestUrl = request.getRequestURL().toString();
-			final HttpHeaders headers = new ServletServerHttpRequest(request).getHeaders();
-
-			throw new NoHandlerFoundException(httpMethod, requestUrl, headers);
+			throw new NotAllowedDomainException(request.getHeader("Referer"));
 		}
 
 		return true;
