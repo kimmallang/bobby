@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.news.vo;
+package com.mallang.bobby.domain.news.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

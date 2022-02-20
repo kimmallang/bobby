@@ -19,8 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import com.mallang.bobby.domain.news.repository.NewsRepository;
 import com.mallang.bobby.domain.news.service.NewsApiService;
 import com.mallang.bobby.domain.news.service.NewsService;
-import com.mallang.bobby.domain.news.vo.NewsRequestQuery;
-import com.mallang.bobby.domain.news.vo.NewsVo;
+import com.mallang.bobby.domain.news.dto.NewsRequestQuery;
+import com.mallang.bobby.domain.news.dto.NewsDto;
 import com.mallang.bobby.external.naver.NaverApi;
 
 @DataJpaTest
@@ -80,7 +80,7 @@ public class NewsServiceTest {
 
 	@Test
 	void saveFromApi() {
-		List<NewsVo> savedNewsList = newsService.refreshFromApi(NewsRequestQuery.IT);
+		List<NewsDto> savedNewsList = newsService.refreshFromApi(NewsRequestQuery.IT);
 
 		assertTrue(savedNewsList.size() > 0, "뉴스 데이터 최신화 실패");
 	}
