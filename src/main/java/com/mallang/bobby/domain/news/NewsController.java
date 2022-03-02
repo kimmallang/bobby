@@ -16,7 +16,7 @@ public class NewsController {
 	private final NewsService newsService;
 
 	@GetMapping("/news")
-	public ResponseDto getNews(NewsRequestQuery query, int page) {
+	public ResponseDto get(NewsRequestQuery query, int page) {
 		return ResponseDto.builder()
 			.data(newsService.get(query, page))
 			.build();
