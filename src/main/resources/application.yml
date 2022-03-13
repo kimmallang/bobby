@@ -9,6 +9,18 @@ spring:
     hibernate:
       format_sql: true
       ddl-auto: none
+
+oauth2:
+  kakao:
+    client-id: 2d03df3830cb6e458063fc862acf041b
+    client-secret: 929XNpfIWB7kHfIXKmZaGi10hkCSjQMt
+    redirect-uri: "https://bobby-djk.herokuapp.com/oauth2/callback/kakao"
+    authorization-uri: https://kauth.kakao.com/oauth/authorize
+    token-uri: https://kauth.kakao.com/oauth/token
+    user-info-uri: https://kapi.kakao.com/v2/user/me
+    user-name-attribute: id
+    scope: profile
+
 api:
   naver:
     client-id: 4phPhh0_MG0qX51vklfy
@@ -27,3 +39,7 @@ spring:
     url: jdbc:mysql://192.168.99.103:3306/bobby
     username: root
     password: 1225
+
+oauth2:
+  kakao:
+    redirect-uri: "http://localhost:8080/oauth2/callback/kakao"

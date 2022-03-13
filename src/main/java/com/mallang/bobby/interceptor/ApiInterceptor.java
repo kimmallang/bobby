@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.mallang.bobby.exception.NotAllowedDomainException;
 
@@ -19,7 +18,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 	};
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws NoHandlerFoundException {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws NotAllowedDomainException {
 		if (!isAllowedDomain(request)) {
 			throw new NotAllowedDomainException(request.getHeader("Referer"));
 		}

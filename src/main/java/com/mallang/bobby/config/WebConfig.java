@@ -11,7 +11,9 @@ import com.mallang.bobby.interceptor.ApiInterceptor;
 public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(new ApiInterceptor())
+			.addPathPatterns("/**")
+			.excludePathPatterns("/oauth2/**");
 	}
 
 	@Override
