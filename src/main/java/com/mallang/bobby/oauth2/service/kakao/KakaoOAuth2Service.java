@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.mallang.bobby.oauth2.dto.AccessTokenResponse;
+import com.mallang.bobby.oauth2.dto.kakao.KakaoUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +38,9 @@ public class KakaoOAuth2Service {
 	@Value("${oauth2.kakao.token-uri}")
 	private String tokenUri;
 
+	@Value("${oauth2.kakao.user-info-uri}")
+	private String userInfoUri;
+
 	public String getKakaoAuthorizeUrl() {
 		return UriComponentsBuilder.fromHttpUrl(authorizationUri)
 			.queryParam("response_type", "code")
@@ -47,7 +51,7 @@ public class KakaoOAuth2Service {
 			.toUriString();
 	}
 
-	public AccessTokenResponse getAccessToken(String code) {
+	public String getAccessToken(String code) {
 		try {
 			final MultiValueMap<String, Object> data = new LinkedMultiValueMap<String, Object>(){{
 				add("grant_type", "authorization_code");
@@ -56,9 +60,18 @@ public class KakaoOAuth2Service {
 				add("redirect_uri", redirectUri);
 				add("code", code);
 			}};
-			return restTemplate.exchange(tokenUri, HttpMethod.POST, getRequestEntity(data), AccessTokenResponse.class).getBody();
+			return restTemplate.exchange(tokenUri, HttpMethod.POST, getRequestEntity(data), AccessTokenResponse.class).getBody().getAccessToken();
 		} catch (Exception e) {
 			log.error("KakaoOAuth2Service.getAccessToken() {}", e.getMessage());
+			throw e;
+		}
+	}
+
+	public KakaoUserResponse getUser(String accessToken) {
+		try {
+			return restTemplate.exchange(userInfoUri, HttpMethod.POST, getRequestEntity(accessToken), KakaoUserResponse.class).getBody();
+		} catch (Exception e) {
+			log.error("KakaoOAuth2Service.getUser() {}", e.getMessage());
 			throw e;
 		}
 	}
@@ -67,5 +80,12 @@ public class KakaoOAuth2Service {
 		final HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
 		return new HttpEntity<>(data, httpHeaders);
+	}
+
+	private HttpEntity getRequestEntity(String accessToken) {
+		final HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+		httpHeaders.add("Authorization", "Bearer " + accessToken);
+		return new HttpEntity<>(httpHeaders);
 	}
 }

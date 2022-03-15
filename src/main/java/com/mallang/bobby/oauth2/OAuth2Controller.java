@@ -30,10 +30,8 @@ public class OAuth2Controller {
 
 	@GetMapping("/callback/{provider}")
 	public ResponseDto callback(@PathVariable OAuth2Provider provider, String code) {
-		final String accessToken = oAuth2Service.getAccessToken(provider, code);
-
 		return ResponseDto.builder()
-			.data(accessToken)
+			.data(oAuth2Service.getUserInfo(provider, code))
 			.build();
 	}
 
