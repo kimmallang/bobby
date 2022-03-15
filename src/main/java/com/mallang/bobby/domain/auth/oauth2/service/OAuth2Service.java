@@ -1,12 +1,11 @@
-package com.mallang.bobby.oauth2.service;
+package com.mallang.bobby.domain.auth.oauth2.service;
 
 import org.springframework.stereotype.Service;
 
-import com.mallang.bobby.oauth2.dto.AccessTokenResponse;
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
-import com.mallang.bobby.oauth2.dto.kakao.KakaoUserResponse;
-import com.mallang.bobby.oauth2.exception.NotSupportProviderException;
-import com.mallang.bobby.oauth2.service.kakao.KakaoOAuth2Service;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.oauth2.dto.kakao.KakaoUserResponse;
+import com.mallang.bobby.domain.auth.oauth2.exception.NotSupportProviderException;
+import com.mallang.bobby.domain.auth.oauth2.service.kakao.KakaoOAuth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package com.mallang.bobby.oauth2.exception;
+package com.mallang.bobby.domain.auth.oauth2.exception;
 
 public class NotSupportProviderException extends RuntimeException {
 	public NotSupportProviderException(String provider) {

@@ -1,4 +1,4 @@
-package com.mallang.bobby.oauth2.dto.kakao;
+package com.mallang.bobby.domain.auth.oauth2.dto.kakao;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class KakaoProfile {
-    private String nickname;
-    private String thumbnailImageUrl;
-    private String profileImageUrl;
-    private Boolean isDefaultImage;
+public class KakaoAccount {
+    private KakaoProfile profile;
 }

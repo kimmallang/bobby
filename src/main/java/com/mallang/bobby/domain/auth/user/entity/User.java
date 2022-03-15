@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.user.entity;
+package com.mallang.bobby.domain.auth.user.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.mallang.bobby.entity.BaseEntity;
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

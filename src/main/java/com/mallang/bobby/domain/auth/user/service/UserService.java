@@ -1,12 +1,12 @@
-package com.mallang.bobby.domain.user.service;
+package com.mallang.bobby.domain.auth.user.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.mallang.bobby.domain.user.dto.UserDto;
-import com.mallang.bobby.domain.user.entity.User;
-import com.mallang.bobby.domain.user.repository.UserRepository;
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.user.dto.UserDto;
+import com.mallang.bobby.domain.auth.user.entity.User;
+import com.mallang.bobby.domain.auth.user.repository.UserRepository;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

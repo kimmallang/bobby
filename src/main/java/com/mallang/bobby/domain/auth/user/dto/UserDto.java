@@ -1,6 +1,6 @@
-package com.mallang.bobby.domain.user.dto;
+package com.mallang.bobby.domain.auth.user.dto;
 
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

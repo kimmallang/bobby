@@ -1,4 +1,4 @@
-package com.mallang.bobby.oauth2.dto;
+package com.mallang.bobby.domain.auth.oauth2.dto.kakao;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,11 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AccessTokenResponse {
-    private String tokenType;
-	private String accessToken;
-	private Integer expiresIn;
-	private String refreshToken;
-	private Integer refreshTokenExpiresIn;
-	private String scope;
+public class KakaoUserResponse {
+    private Long id;
+	private KakaoAccount kakaoAccount;
 }

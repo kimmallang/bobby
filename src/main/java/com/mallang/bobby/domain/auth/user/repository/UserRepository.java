@@ -1,12 +1,12 @@
-package com.mallang.bobby.domain.user.repository;
+package com.mallang.bobby.domain.auth.user.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mallang.bobby.domain.user.entity.User;
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.user.entity.User;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

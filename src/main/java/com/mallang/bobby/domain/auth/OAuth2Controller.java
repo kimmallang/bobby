@@ -1,4 +1,4 @@
-package com.mallang.bobby.oauth2;
+package com.mallang.bobby.domain.auth;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.dto.ResponseDto;
 import com.mallang.bobby.dto.ResponseStatus;
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
-import com.mallang.bobby.oauth2.exception.NotSupportProviderException;
-import com.mallang.bobby.oauth2.service.OAuth2Service;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.oauth2.exception.NotSupportProviderException;
+import com.mallang.bobby.domain.auth.oauth2.service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,11 +33,5 @@ public class OAuth2Controller {
 		return ResponseDto.builder()
 			.data(oAuth2Service.getUserInfo(provider, code))
 			.build();
-	}
-
-	@ExceptionHandler(NotSupportProviderException.class)
-	public ResponseDto handleError(NotSupportProviderException e) {
-		log.error(e.getMessage());
-		return ResponseDto.builder().status(ResponseStatus.ERROR).build();
 	}
 }
