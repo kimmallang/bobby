@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.user;
+package com.mallang.bobby.domain.auth.user;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,10 +12,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mallang.bobby.domain.user.dto.UserDto;
-import com.mallang.bobby.domain.user.repository.UserRepository;
-import com.mallang.bobby.domain.user.service.UserService;
-import com.mallang.bobby.oauth2.dto.OAuth2Provider;
+import com.mallang.bobby.domain.auth.user.dto.UserDto;
+import com.mallang.bobby.domain.auth.user.repository.UserRepository;
+import com.mallang.bobby.domain.auth.user.service.UserService;
+import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 
 @DataJpaTest
 @Transactional

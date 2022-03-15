@@ -1,4 +1,4 @@
-package com.mallang.bobby.oauth2.service.kakao;
+package com.mallang.bobby.domain.auth.oauth2.service.kakao;
 
 import java.util.Map;
 
@@ -12,8 +12,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.mallang.bobby.oauth2.dto.AccessTokenResponse;
-import com.mallang.bobby.oauth2.dto.kakao.KakaoUserResponse;
+import com.mallang.bobby.domain.auth.oauth2.dto.AccessTokenResponse;
+import com.mallang.bobby.domain.auth.oauth2.dto.kakao.KakaoUserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
