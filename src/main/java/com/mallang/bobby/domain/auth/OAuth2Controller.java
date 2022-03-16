@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.dto.ResponseDto;
 import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
-import com.mallang.bobby.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,22 +29,8 @@ public class OAuth2Controller {
 
 	@GetMapping("/callback/{provider}")
 	public ResponseDto callback(@PathVariable OAuth2Provider provider, String code, HttpServletResponse httpServletResponse) {
-		httpServletResponse.addCookie(CookieUtil.make("test", "test"));
-
-		return ResponseDto.builder().build();
-	}
-
-	@GetMapping("/test1")
-	public ResponseDto test1(HttpServletResponse httpServletResponse) {
-		httpServletResponse.addCookie(CookieUtil.make("test", "test"));
-
-		return ResponseDto.builder().build();
-	}
-
-	@GetMapping("/test2")
-	public ResponseDto test2(HttpServletRequest httpServletRequest) {
 		return ResponseDto.builder()
-			.data(httpServletRequest.getCookies())
+			.data(authService.getUserToken(provider, code))
 			.build();
 	}
 }
