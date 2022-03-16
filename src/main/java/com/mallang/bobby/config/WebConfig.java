@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new ApiInterceptor())
 			.addPathPatterns("/**")
-			.excludePathPatterns("/oauth2/**");
+			.excludePathPatterns("/api/oauth2/**"); // todo oauth2 개발 완료 후 코드 제거
 	}
 
 	@Override

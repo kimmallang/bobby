@@ -10,7 +10,7 @@ import com.mallang.bobby.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/mallang")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class NewsController {
 	private final NewsService newsService;

@@ -1,21 +1,21 @@
 package com.mallang.bobby.domain.auth;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.dto.ResponseDto;
-import com.mallang.bobby.dto.ResponseStatus;
 import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
-import com.mallang.bobby.domain.auth.oauth2.exception.NotSupportProviderException;
-import com.mallang.bobby.domain.auth.oauth2.service.OAuth2Service;
+import com.mallang.bobby.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequestMapping("/oauth2")
+@RequestMapping("/api/oauth2")
 @RestController
 @RequiredArgsConstructor
 public class OAuth2Controller {
@@ -29,9 +29,23 @@ public class OAuth2Controller {
 	}
 
 	@GetMapping("/callback/{provider}")
-	public ResponseDto callback(@PathVariable OAuth2Provider provider, String code) {
+	public ResponseDto callback(@PathVariable OAuth2Provider provider, String code, HttpServletResponse httpServletResponse) {
+		httpServletResponse.addCookie(CookieUtil.make("test", "test"));
+
+		return ResponseDto.builder().build();
+	}
+
+	@GetMapping("/test1")
+	public ResponseDto test1(HttpServletResponse httpServletResponse) {
+		httpServletResponse.addCookie(CookieUtil.make("test", "test"));
+
+		return ResponseDto.builder().build();
+	}
+
+	@GetMapping("/test2")
+	public ResponseDto test2(HttpServletRequest httpServletRequest) {
 		return ResponseDto.builder()
-			.data(authService.getUserToken(provider, code))
+			.data(httpServletRequest.getCookies())
 			.build();
 	}
 }

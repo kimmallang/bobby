@@ -11,7 +11,7 @@ import com.mallang.bobby.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/mallang/")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class FreeBoardController {
 	private final FreeBoardService freeBoardService;
