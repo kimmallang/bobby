@@ -19,19 +19,19 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class OAuth2Controller {
-	private final OAuth2Service oAuth2Service;
+	private final AuthService authService;
 
 	@GetMapping("/authorize/{provider}")
 	public ResponseDto authorize(@PathVariable OAuth2Provider provider) {
 		return ResponseDto.builder()
-			.data(oAuth2Service.getAuthorizeUrl(provider))
+			.data(authService.getAuthorizeUrl(provider))
 			.build();
 	}
 
 	@GetMapping("/callback/{provider}")
 	public ResponseDto callback(@PathVariable OAuth2Provider provider, String code) {
 		return ResponseDto.builder()
-			.data(oAuth2Service.getUserInfo(provider, code))
+			.data(authService.getUserToken(provider, code))
 			.build();
 	}
 }

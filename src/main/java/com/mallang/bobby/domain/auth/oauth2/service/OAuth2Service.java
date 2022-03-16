@@ -6,6 +6,7 @@ import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 import com.mallang.bobby.domain.auth.oauth2.dto.kakao.KakaoUserResponse;
 import com.mallang.bobby.domain.auth.oauth2.exception.NotSupportProviderException;
 import com.mallang.bobby.domain.auth.oauth2.service.kakao.KakaoOAuth2Service;
+import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,10 +25,18 @@ public class OAuth2Service {
 		throw new NotSupportProviderException(oAuth2Provider.name());
 	}
 
-	public KakaoUserResponse getUserInfo(OAuth2Provider oAuth2Provider, String code) {
+	public UserDto getUserInfo(OAuth2Provider oAuth2Provider, String code) {
 		if (OAuth2Provider.kakao.equals(oAuth2Provider)) {
 			final String accessToken = this.getAccessToken(oAuth2Provider, code);
-			return kakaoOAuth2Service.getUser(accessToken);
+			final KakaoUserResponse kakaoUserResponse = kakaoOAuth2Service.getUser(accessToken);
+
+			return UserDto.builder()
+				.userId(kakaoUserResponse.getId())
+				.authorizedBy(oAuth2Provider)
+				.nickname(kakaoUserResponse.getKakaoAccount().getProfile().getNickname())
+				.profileImageUrl(kakaoUserResponse.getKakaoAccount().getProfile().getProfileImageUrl())
+				.profileThumbnailUrl(kakaoUserResponse.getKakaoAccount().getProfile().getThumbnailImageUrl())
+				.build();
 		}
 
 		throw new NotSupportProviderException(oAuth2Provider.name());
