@@ -27,11 +27,11 @@ public class UserService {
 		return modelMapper.map(user, UserDto.class);
 	}
 
-	public void save(UserDto userDto) {
+	public Long save(UserDto userDto) {
 		final User user = modelMapper.map(userDto, User.class);
-		final Long id = userRepository.findByUserId(userDto.getUserId()).orElse(new User()).getId();
+		final Long id = userRepository.findByAuthorizedByAndUserId(userDto.getAuthorizedBy(), userDto.getUserId()).orElse(new User()).getId();
 		user.setId(id);
 
-		userRepository.save(user);
+		return userRepository.save(user).getId();
 	}
 }

@@ -5,11 +5,17 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.mallang.bobby.domain.auth.token.UserTokenService;
+import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.exception.NotAllowedDomainException;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class ApiInterceptor implements HandlerInterceptor {
+	private final UserTokenService userTokenService;
 	final String[] allowedDomain = new String[] {
 		"http://localhost:3000",
 		"http://localhost:8080",
@@ -22,6 +28,8 @@ public class ApiInterceptor implements HandlerInterceptor {
 		if (!isAllowedDomain(request)) {
 			throw new NotAllowedDomainException(request.getHeader("Referer"));
 		}
+
+		readUtkn(request);
 
 		return true;
 	}
@@ -39,5 +47,16 @@ public class ApiInterceptor implements HandlerInterceptor {
 		}
 
 		return Arrays.stream(allowedDomain).anyMatch(referer::startsWith);
+	}
+
+	private void readUtkn(HttpServletRequest request) {
+		final String utkn = request.getHeader("utkn");
+
+		if (!StringUtils.hasLength(utkn)) {
+			return;
+		}
+
+		final UserDto userDto = userTokenService.convertUtkn(utkn);
+		request.setAttribute("user", userDto);
 	}
 }

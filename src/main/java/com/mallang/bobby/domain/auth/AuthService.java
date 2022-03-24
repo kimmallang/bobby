@@ -22,7 +22,8 @@ public class AuthService {
 
 	public String getUserToken(OAuth2Provider oAuth2Provider, String code) {
 		final UserDto userDto = oAuth2Service.getUserInfo(oAuth2Provider, code);
-		userService.save(userDto);
+		final Long id = userService.save(userDto);
+		userDto.setId(id);
 
 		return userTokenService.generateUtkn(userDto);
 	}

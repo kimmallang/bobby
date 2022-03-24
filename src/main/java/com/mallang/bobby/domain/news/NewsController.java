@@ -1,5 +1,7 @@
 package com.mallang.bobby.domain.news;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +18,7 @@ public class NewsController {
 	private final NewsService newsService;
 
 	@GetMapping("/news")
-	public ResponseDto get(NewsRequestQuery query, int page) {
+	public ResponseDto get(NewsRequestQuery query, int page, HttpServletRequest request) {
 		return ResponseDto.builder()
 			.data(newsService.get(query, page))
 			.build();
