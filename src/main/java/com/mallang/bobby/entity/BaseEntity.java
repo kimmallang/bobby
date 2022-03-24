@@ -16,11 +16,11 @@ public abstract class BaseEntity {
 
 	@Column(name = "created_at", updatable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime createdAt;
+	protected LocalDateTime createdAt;
 
 	@Column(name = "modified_at")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime modifiedAt;
+	protected LocalDateTime modifiedAt;
 
 	@PrePersist
 	void created() {

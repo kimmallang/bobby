@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.mallang.bobby.domain.news.vo.NewsRequestQuery;
-import com.mallang.bobby.domain.news.vo.NewsVo;
+import com.mallang.bobby.domain.news.dto.NewsRequestQuery;
+import com.mallang.bobby.domain.news.dto.NewsDto;
 import com.mallang.bobby.external.naver.NaverApi;
 import com.mallang.bobby.external.naver.request.news.NewsRequest;
 import com.mallang.bobby.external.naver.request.news.NewsRequestSort;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class NewsApiService {
 	private final NaverApi naverApi;
 
-	public List<NewsVo> get(NewsRequestQuery newsRequestQuery) {
+	public List<NewsDto> get(NewsRequestQuery newsRequestQuery) {
 		NewsResponse newsResponse = naverApi.getNews(NewsRequest.builder()
 			.query(newsRequestQuery.getQuery())
 			.sort(NewsRequestSort.sim)
@@ -28,7 +28,7 @@ public class NewsApiService {
 
 		return newsResponse.getItems()
 			.stream()
-			.map(item -> NewsVo.builder()
+			.map(item -> NewsDto.builder()
 				.query(newsRequestQuery)
 				.title(item.getTitle())
 				.originalLink(item.getOriginallink())

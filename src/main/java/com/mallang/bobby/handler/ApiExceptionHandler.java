@@ -7,7 +7,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.mallang.bobby.dto.ResponseDto;
 import com.mallang.bobby.dto.ResponseStatus;
 import com.mallang.bobby.exception.NotAllowedDomainException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 class ApiExceptionHandler {
 	@ExceptionHandler(NoHandlerFoundException.class)
@@ -17,13 +19,12 @@ class ApiExceptionHandler {
 
 	@ExceptionHandler(NotAllowedDomainException.class)
 	public ResponseDto handleForbidden(NotAllowedDomainException e) {
-		return ResponseDto.builder().status(ResponseStatus.FORBIDDEN)
-			.data(e.getMessage())
-			.build();
+		return ResponseDto.builder().status(ResponseStatus.FORBIDDEN).build();
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseDto handleError() {
+	public ResponseDto handleError(Exception e) {
+		log.error(e.getMessage());
 		return ResponseDto.builder().status(ResponseStatus.ERROR).build();
 	}
 }

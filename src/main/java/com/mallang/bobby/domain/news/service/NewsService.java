@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mallang.bobby.domain.news.dto.NewsResponse;
 import com.mallang.bobby.domain.news.repository.NewsRepository;
-import com.mallang.bobby.domain.news.vo.NewsRequestQuery;
-import com.mallang.bobby.domain.news.vo.NewsVo;
+import com.mallang.bobby.domain.news.dto.NewsRequestQuery;
+import com.mallang.bobby.domain.news.dto.NewsDto;
 import com.mallang.bobby.domain.news.entity.News;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,16 +34,16 @@ public class NewsService {
 
 	@CacheEvict(value = "news", allEntries = true)
 	@Transactional
-	public List<NewsVo> refreshFromApi(NewsRequestQuery newsRequestQuery) {
-		final List<NewsVo> newsVoList = newsApiService.get(newsRequestQuery);
-		final List<News> newsList = newsVoList.stream()
-			.map(newsVo -> modelMapper.map(newsVo, News.class))
+	public List<NewsDto> refreshFromApi(NewsRequestQuery newsRequestQuery) {
+		final List<NewsDto> newsDtoList = newsApiService.get(newsRequestQuery);
+		final List<News> newsList = newsDtoList.stream()
+			.map(newsDto -> modelMapper.map(newsDto, News.class))
 			.collect(Collectors.toList());
 
 		newsRepository.deleteAllByQuery(newsRequestQuery.getQuery());
 
 		return newsRepository.saveAll(newsList).stream()
-			.map(news -> modelMapper.map(news, NewsVo.class))
+			.map(news -> modelMapper.map(news, NewsDto.class))
 			.collect(Collectors.toList());
 	}
 
@@ -56,7 +56,7 @@ public class NewsService {
 			.page(page)
 			.isLast(page >= newsPage.getTotalPages())
 			.items(newsPage.getContent().stream()
-				.map(news -> modelMapper.map(news, NewsVo.class))
+				.map(news -> modelMapper.map(news, NewsDto.class))
 				.collect(Collectors.toList()))
 			.build();
 	}

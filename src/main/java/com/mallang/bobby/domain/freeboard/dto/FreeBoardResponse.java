@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.news.dto;
+package com.mallang.bobby.domain.freeboard.dto;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class NewsResponse {
+public class FreeBoardResponse {
 	private Integer page;
 	private Boolean isLast;
-	private List<NewsDto> items;
+	private List<FreeBoardDto> items;
 }

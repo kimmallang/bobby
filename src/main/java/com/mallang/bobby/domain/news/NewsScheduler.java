@@ -4,7 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.mallang.bobby.domain.news.service.NewsService;
-import com.mallang.bobby.domain.news.vo.NewsRequestQuery;
+import com.mallang.bobby.domain.news.dto.NewsRequestQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

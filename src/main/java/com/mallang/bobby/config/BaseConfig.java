@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @EnableWebMvc
 @EnableCaching
 @EnableScheduling
@@ -41,5 +43,10 @@ public class BaseConfig {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
+	}
+
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
 	}
 }

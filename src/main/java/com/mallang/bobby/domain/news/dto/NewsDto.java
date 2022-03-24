@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.news.vo;
+package com.mallang.bobby.domain.news.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewsVo {
+public class NewsDto {
 	private Long id;
 	private NewsRequestQuery query;
 	private String title;
