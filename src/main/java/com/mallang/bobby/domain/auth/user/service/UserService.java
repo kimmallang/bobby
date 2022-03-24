@@ -22,7 +22,7 @@ public class UserService {
 		return modelMapper.map(user, UserDto.class);
 	}
 
-	public UserDto get(OAuth2Provider provider, Long userId) {
+	public UserDto get(OAuth2Provider provider, String userId) {
 		final User user = userRepository.findByAuthorizedByAndUserId(provider, userId).orElse(new User());
 		return modelMapper.map(user, UserDto.class);
 	}

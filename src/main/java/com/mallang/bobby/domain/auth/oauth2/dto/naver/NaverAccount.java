@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.auth.oauth2.dto;
+package com.mallang.bobby.domain.auth.oauth2.dto.naver;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -12,11 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AccessTokenResponse {
-    private String tokenType;
-	private String accessToken;
-	private Integer expiresIn;
-	private String refreshToken;
-	private Integer refreshTokenExpiresIn;
-	private String scope;
+public class NaverAccount {
+    private String id;
+    private String age;
+    private String name;
+    private String email;
+    private String mobile;
+    private String gender;
+    private String nickname;
+    private String birthday;
+    private String birthyear;
+    private String profileImage;
 }

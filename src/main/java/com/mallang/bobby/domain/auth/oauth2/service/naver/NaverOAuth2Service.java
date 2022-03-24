@@ -1,4 +1,4 @@
-package com.mallang.bobby.domain.auth.oauth2.service.kakao;
+package com.mallang.bobby.domain.auth.oauth2.service.naver;
 
 import java.util.Map;
 
@@ -15,6 +15,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.mallang.bobby.domain.auth.oauth2.dto.AccessTokenResponse;
 import com.mallang.bobby.domain.auth.oauth2.dto.OAuth2Provider;
 import com.mallang.bobby.domain.auth.oauth2.dto.kakao.KakaoUserResponse;
+import com.mallang.bobby.domain.auth.oauth2.dto.naver.NaverAccount;
+import com.mallang.bobby.domain.auth.oauth2.dto.naver.NaverUserResponse;
 import com.mallang.bobby.domain.auth.oauth2.service.OAuth2Service;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -23,25 +25,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class KakaoOAuth2Service implements OAuth2Service {
+public class NaverOAuth2Service implements OAuth2Service {
 	private final RestTemplate restTemplate;
 
-	@Value("${oauth2.kakao.client-id}")
+	@Value("${oauth2.naver.client-id}")
 	private String clientId;
 
-	@Value("${oauth2.kakao.client-secret}")
+	@Value("${oauth2.naver.client-secret}")
 	private String clientSecret;
 
-	@Value("${oauth2.kakao.redirect-uri}")
+	@Value("${oauth2.naver.redirect-uri}")
 	private String redirectUri;
 
-	@Value("${oauth2.kakao.authorization-uri}")
+	@Value("${oauth2.naver.authorization-uri}")
 	private String authorizationUri;
 
-	@Value("${oauth2.kakao.token-uri}")
+	@Value("${oauth2.naver.token-uri}")
 	private String tokenUri;
 
-	@Value("${oauth2.kakao.user-info-uri}")
+	@Value("${oauth2.naver.user-info-uri}")
 	private String userInfoUri;
 
 	@Override
@@ -58,16 +60,18 @@ public class KakaoOAuth2Service implements OAuth2Service {
 	@Override
 	public String getAccessToken(String code) {
 		try {
-			final MultiValueMap<String, Object> data = new LinkedMultiValueMap<String, Object>(){{
-				add("grant_type", "authorization_code");
-				add("client_id", clientId);
-				add("client_secret", clientSecret);
-				add("redirect_uri", redirectUri);
-				add("code", code);
-			}};
-			return restTemplate.exchange(tokenUri, HttpMethod.POST, getRequestEntity(data), AccessTokenResponse.class).getBody().getAccessToken();
+			final String tokenUrl = UriComponentsBuilder.fromHttpUrl(tokenUri)
+				.queryParam("grant_type", "authorization_code")
+				.queryParam("client_id", clientId)
+				.queryParam("client_secret", clientSecret)
+				.queryParam("redirect_uri", redirectUri)
+				.queryParam("code", code)
+				.encode()
+				.toUriString();
+
+			return restTemplate.exchange(tokenUrl, HttpMethod.GET, getRequestEntity(), AccessTokenResponse.class).getBody().getAccessToken();
 		} catch (Exception e) {
-			log.error("KakaoOAuth2Service.getAccessToken() {}", e.getMessage());
+			log.error("NaverOAuth2Service.getAccessToken() {}", e.getMessage());
 			throw e;
 		}
 	}
@@ -75,25 +79,26 @@ public class KakaoOAuth2Service implements OAuth2Service {
 	@Override
 	public UserDto getUser(String accessToken) {
 		try {
-			final KakaoUserResponse kakaoUserResponse = restTemplate.exchange(userInfoUri, HttpMethod.POST, getRequestEntity(accessToken), KakaoUserResponse.class).getBody();
+			final NaverUserResponse naverUserResponse = restTemplate.exchange(userInfoUri, HttpMethod.GET, getRequestEntity(accessToken), NaverUserResponse.class).getBody();
+			final NaverAccount naverAccount = naverUserResponse.getResponse();
 
 			return UserDto.builder()
-				.userId(kakaoUserResponse.getId().toString())
-				.authorizedBy(OAuth2Provider.kakao)
-				.nickname(kakaoUserResponse.getKakaoAccount().getProfile().getNickname())
-				.profileImageUrl(kakaoUserResponse.getKakaoAccount().getProfile().getProfileImageUrl())
-				.profileThumbnailUrl(kakaoUserResponse.getKakaoAccount().getProfile().getThumbnailImageUrl())
+				.userId(naverAccount.getId())
+				.authorizedBy(OAuth2Provider.naver)
+				.nickname(naverAccount.getNickname())
+				.profileImageUrl(naverAccount.getProfileImage())
+				.profileThumbnailUrl(naverAccount.getProfileImage())
 				.build();
 		} catch (Exception e) {
-			log.error("KakaoOAuth2Service.getUser() {}", e.getMessage());
+			log.error("NaverOAuth2Service.getUser() {}", e.getMessage());
 			throw e;
 		}
 	}
 
-	private HttpEntity getRequestEntity(Map data) {
+	private HttpEntity getRequestEntity() {
 		final HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
-		return new HttpEntity<>(data, httpHeaders);
+		return new HttpEntity<>(httpHeaders);
 	}
 
 	private HttpEntity getRequestEntity(String accessToken) {

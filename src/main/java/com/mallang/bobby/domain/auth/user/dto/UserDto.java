@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDto {
 	private Long id;
-	private Long userId;
+	private String userId;
 	private OAuth2Provider authorizedBy;
 	private String nickname;
 	private String profileImageUrl;

@@ -38,7 +38,7 @@ public class UserServiceTest {
 	public void insertUser() {
 		final UserDto userDto = UserDto.builder()
 			.authorizedBy(OAuth2Provider.kakao)
-			.userId(1234L)
+			.userId("1234")
 			.nickname("testNickname")
 			.profileImageUrl("testPOProfileImageUrl")
 			.profileThumbnailUrl("testProfileThumbnailUrl")
@@ -46,7 +46,7 @@ public class UserServiceTest {
 
 		userService.save(userDto);
 
-		final UserDto savedUserDto = userService.get(OAuth2Provider.kakao, 1234L);
+		final UserDto savedUserDto = userService.get(OAuth2Provider.kakao, "1234");
 		assertEquals("testNickname", savedUserDto.getNickname());
 		assertEquals("testPOProfileImageUrl", savedUserDto.getProfileImageUrl());
 		assertEquals("testProfileThumbnailUrl", savedUserDto.getProfileThumbnailUrl());
@@ -56,7 +56,7 @@ public class UserServiceTest {
 	public void updateUser() {
 		final UserDto userDto = UserDto.builder()
 			.authorizedBy(OAuth2Provider.kakao)
-			.userId(1234L)
+			.userId("1234")
 			.nickname("testNickname")
 			.profileImageUrl("testPOProfileImageUrl")
 			.profileThumbnailUrl("testProfileThumbnailUrl")
@@ -64,7 +64,7 @@ public class UserServiceTest {
 
 		userService.save(userDto);
 
-		final UserDto savedUser = userService.get(OAuth2Provider.kakao, 1234L);
+		final UserDto savedUser = userService.get(OAuth2Provider.kakao, "1234");
 		savedUser.setNickname("testNickname2");
 
 		userService.save(savedUser);

@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 	private Long id;
 
 	@Column(name = "user_id")
-	private Long userId;
+	private String userId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "authorized_by")
