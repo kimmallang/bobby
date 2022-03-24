@@ -18,6 +18,7 @@ public class FreeBoardDto {
 	private String contents;
 	private String writerId;
 	private Integer likeCount;
+	private Integer commentsCount;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime createdAt;

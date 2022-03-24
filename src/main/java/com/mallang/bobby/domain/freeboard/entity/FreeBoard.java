@@ -39,6 +39,9 @@ public class FreeBoard extends BaseEntity {
 	@Column(name = "like_count")
 	private Integer likeCount;
 
+	@Column(name = "comments_count")
+	private Integer commentsCount;
+
 	public LocalDateTime getCreatedAt() {
 		return super.createdAt;
 	}
