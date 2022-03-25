@@ -16,7 +16,8 @@ public class FreeBoardDto {
 	private Long id;
 	private String title;
 	private String contents;
-	private String writerId;
+	private Long writerId;
+	private String writerNickname;
 	private Integer likeCount;
 	private Integer commentsCount;
 

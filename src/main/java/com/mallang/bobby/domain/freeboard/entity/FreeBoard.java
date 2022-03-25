@@ -34,7 +34,10 @@ public class FreeBoard extends BaseEntity {
 	private String contents;
 
 	@Column(name = "writer_id")
-	private String writerId;
+	private Long writerId;
+
+	@Column(name = "writer_nickname")
+	private String writerNickname;
 
 	@Column(name = "like_count")
 	private Integer likeCount;
