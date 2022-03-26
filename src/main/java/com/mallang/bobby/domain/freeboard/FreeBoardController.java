@@ -3,6 +3,7 @@ package com.mallang.bobby.domain.freeboard;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,13 @@ public class FreeBoardController {
 	public ResponseDto get(int page, int size) {
 		return ResponseDto.builder()
 			.data(freeBoardService.get(page, size))
+			.build();
+	}
+
+	@GetMapping("/free-board/{id}")
+	public ResponseDto get(@PathVariable long id) {
+		return ResponseDto.builder()
+			.data(freeBoardService.get(id))
 			.build();
 	}
 
