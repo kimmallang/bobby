@@ -25,11 +25,10 @@ public class FreeBoardService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardRepository freeBoardRepository;
 
-	private static final int pagingSize = 20;
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
-	public FreeBoardResponse get(int page) {
-		final Pageable pageable = PageRequest.of((page - 1), pagingSize, sortByIdDesc);
+	public FreeBoardResponse get(int page, int size) {
+		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
 		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAll(pageable);
 
 		return FreeBoardResponse.builder()
