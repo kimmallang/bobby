@@ -41,7 +41,7 @@ public class FreeBoardServiceTest {
 
 	@Test
 	public void get() {
-		final FreeBoardDto freeBoardDto = freeBoardService.get(1L);
+		final FreeBoardDto freeBoardDto = freeBoardService.get(1L, null);
 		assertEquals(1L, freeBoardDto.getId());
 	}
 
@@ -78,7 +78,7 @@ public class FreeBoardServiceTest {
 			.build();
 
 		freeBoardService.save(freeBoardDto, userDto);
-		final FreeBoardDto savedFreeBoardDto = freeBoardService.get(1L);
+		final FreeBoardDto savedFreeBoardDto = freeBoardService.get(1L, null);
 
 		assertEquals("title", savedFreeBoardDto.getTitle());
 		assertEquals("contents", savedFreeBoardDto.getContents());

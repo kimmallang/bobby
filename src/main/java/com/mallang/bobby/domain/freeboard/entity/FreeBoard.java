@@ -48,4 +48,8 @@ public class FreeBoard extends BaseEntity {
 	public LocalDateTime getCreatedAt() {
 		return super.createdAt;
 	}
+
+	public LocalDateTime getModifiedAt() {
+		return super.modifiedAt;
+	}
 }

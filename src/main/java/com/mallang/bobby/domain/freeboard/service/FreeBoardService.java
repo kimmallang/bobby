@@ -40,8 +40,14 @@ public class FreeBoardService {
 			.build();
 	}
 
-	public FreeBoardDto get(long id) {
-		return modelMapper.map(freeBoardRepository.findById(id).orElse(new FreeBoard()), FreeBoardDto.class);
+	public FreeBoardDto get(long id, UserDto userDto) {
+		final FreeBoard freeBoard = freeBoardRepository.findById(id).orElse(new FreeBoard());
+		final FreeBoardDto freeBoardDto = modelMapper.map(freeBoard, FreeBoardDto.class);
+
+		final boolean isMine = (userDto != null) && (freeBoardDto.getWriterId().equals(userDto.getId()));
+		freeBoardDto.setIsMine(isMine);
+
+		return freeBoardDto;
 	}
 
 	public void save(FreeBoardDto freeBoardDto, UserDto userDto) {

@@ -29,9 +29,10 @@ public class FreeBoardController {
 	}
 
 	@GetMapping("/free-board/{id}")
-	public ResponseDto get(@PathVariable long id) {
+	public ResponseDto get(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardService.get(id))
+			.data(freeBoardService.get(id, user))
 			.build();
 	}
 
