@@ -83,4 +83,18 @@ public class FreeBoardServiceTest {
 		assertEquals("title", savedFreeBoardDto.getTitle());
 		assertEquals("contents", savedFreeBoardDto.getContents());
 	}
+
+	@Test
+	public void delete() {
+		final FreeBoardDto freeBoardBefore = freeBoardService.get(1L, null);
+		assertFalse(freeBoardBefore.getDeleteYn());
+
+		UserDto userDto = UserDto.builder()
+			.id(freeBoardBefore.getWriterId())
+			.build();
+		freeBoardService.remove(1L, userDto);
+
+		final FreeBoardDto freeBoardAfter = freeBoardService.get(1L, null);
+		assertTrue(freeBoardAfter.getDeleteYn());
+	}
 }

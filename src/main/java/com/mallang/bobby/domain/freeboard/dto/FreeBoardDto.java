@@ -20,11 +20,13 @@ public class FreeBoardDto {
 	private String writerNickname;
 	private Integer likeCount;
 	private Integer commentsCount;
-	private Boolean isMine;
+	private Boolean deleteYn;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime createdAt;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
+
+	private Boolean isMine;
 }

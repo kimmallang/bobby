@@ -2,6 +2,7 @@ package com.mallang.bobby.domain.freeboard;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,14 @@ public class FreeBoardController {
 	public ResponseDto save(@RequestBody FreeBoardDto freeBoardDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
 		freeBoardService.save(freeBoardDto, user);
+
+		return ResponseDto.builder().build();
+	}
+
+	@DeleteMapping("/free-board/{id}")
+	public ResponseDto delete(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardService.remove(id, user);
 
 		return ResponseDto.builder().build();
 	}

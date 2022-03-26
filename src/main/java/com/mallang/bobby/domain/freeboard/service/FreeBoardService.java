@@ -1,5 +1,6 @@
 package com.mallang.bobby.domain.freeboard.service;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,8 @@ import com.mallang.bobby.domain.freeboard.dto.FreeBoardResponse;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoard;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardRepository;
 import com.mallang.bobby.exception.NotLoginException;
+import com.mallang.bobby.exception.PermissionDeniedException;
+import com.mallang.bobby.exception.UnExpectedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +32,7 @@ public class FreeBoardService {
 
 	public FreeBoardResponse get(int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAll(pageable);
+		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAllByDeleteYn(false, pageable);
 
 		return FreeBoardResponse.builder()
 			.page(page)
@@ -41,7 +44,12 @@ public class FreeBoardService {
 	}
 
 	public FreeBoardDto get(long id, UserDto userDto) {
-		final FreeBoard freeBoard = freeBoardRepository.findById(id).orElse(new FreeBoard());
+		final FreeBoard freeBoard = freeBoardRepository.findByIdAndDeleteYn(id, false).orElse(new FreeBoard());
+
+		if (freeBoard == null) {
+			return null;
+		}
+
 		final FreeBoardDto freeBoardDto = modelMapper.map(freeBoard, FreeBoardDto.class);
 
 		final boolean isMine = (userDto != null) && (freeBoardDto.getWriterId().equals(userDto.getId()));
@@ -68,7 +76,29 @@ public class FreeBoardService {
 		}
 	}
 
+	public void remove(long id, UserDto userDto) {
+		if (userDto == null) {
+			throw new NotLoginException();
+		}
+
+		final FreeBoard freeBoard = freeBoardRepository.findById(id).orElse(null);
+
+		if (freeBoard == null) {
+			throw new UnExpectedException("삭제하려는 게시글이 없습니다.(id=" + id + ")");
+		} else if (!Objects.equals(freeBoard.getWriterId(), userDto.getId())) {
+			throw new PermissionDeniedException();
+		}
+
+		freeBoard.setDeleteYn(true);
+
+		freeBoardRepository.save(freeBoard);
+	}
+
 	private void insert(FreeBoardDto freeBoardDto, UserDto userDto) {
+		if (userDto == null) {
+			throw new NotLoginException();
+		}
+
 		final FreeBoard freeBoard = new FreeBoard();
 		freeBoard.setTitle(freeBoardDto.getTitle());
 		freeBoard.setContents(freeBoardDto.getContents());
@@ -76,18 +106,26 @@ public class FreeBoardService {
 		freeBoard.setLikeCount(0);
 		freeBoard.setWriterId(userDto.getId());
 		freeBoard.setWriterNickname(userDto.getNickname());
+		freeBoard.setDeleteYn(false);
 
 		freeBoardRepository.save(freeBoard);
 	}
 
 	private void update(FreeBoardDto freeBoardDto, UserDto userDto) {
-		final FreeBoard freeBoard = freeBoardRepository.findById(freeBoardDto.getId()).orElse(new FreeBoard());
-		freeBoard.setTitle(freeBoardDto.getTitle());
-		freeBoard.setContents(freeBoardDto.getContents());
-
-		if (freeBoard.getWriterId() != userDto.getId()) {
+		if (userDto == null) {
 			throw new NotLoginException();
 		}
+
+		final FreeBoard freeBoard = freeBoardRepository.findById(freeBoardDto.getId()).orElse(null);
+
+		if (freeBoard == null) {
+			throw new UnExpectedException("수정하려는 게시글이 없습니다.(id=" + freeBoardDto.getId() + ")");
+		} else if (!Objects.equals(freeBoard.getWriterId(), userDto.getId())) {
+			throw new PermissionDeniedException();
+		}
+
+		freeBoard.setTitle(freeBoardDto.getTitle());
+		freeBoard.setContents(freeBoardDto.getContents());
 
 		freeBoardRepository.save(freeBoard);
 	}

@@ -45,6 +45,9 @@ public class FreeBoard extends BaseEntity {
 	@Column(name = "comments_count")
 	private Integer commentsCount;
 
+	@Column(name = "delete_yn")
+	private Boolean deleteYn;
+
 	public LocalDateTime getCreatedAt() {
 		return super.createdAt;
 	}
