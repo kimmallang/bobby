@@ -29,4 +29,5 @@ public class FreeBoardDto {
 	private LocalDateTime modifiedAt;
 
 	private Boolean isMine;
+	private Boolean isLike;
 }

@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeBoardService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardRepository freeBoardRepository;
+	private final FreeBoardLikeService freeBoardLikeService;
 
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
@@ -44,7 +45,7 @@ public class FreeBoardService {
 	}
 
 	public FreeBoardDto get(long id, UserDto userDto) {
-		final FreeBoard freeBoard = freeBoardRepository.findByIdAndDeleteYn(id, false).orElse(new FreeBoard());
+		final FreeBoard freeBoard = freeBoardRepository.findByIdAndDeleteYn(id, false).orElse(null);
 
 		if (freeBoard == null) {
 			return null;
@@ -54,6 +55,9 @@ public class FreeBoardService {
 
 		final boolean isMine = (userDto != null) && (freeBoardDto.getWriterId().equals(userDto.getId()));
 		freeBoardDto.setIsMine(isMine);
+
+		final boolean isLike = isLike(freeBoardDto.getId(), userDto);
+		freeBoardDto.setIsLike(isLike);
 
 		return freeBoardDto;
 	}
@@ -128,5 +132,39 @@ public class FreeBoardService {
 		freeBoard.setContents(freeBoardDto.getContents());
 
 		freeBoardRepository.save(freeBoard);
+	}
+
+	private boolean isLike(long freeBoardId, UserDto userDto) {
+		if (userDto == null) {
+			return false;
+		}
+
+		return freeBoardLikeService.isLike(freeBoardId, userDto.getId());
+	}
+
+	public void like(long freeBoardId, UserDto userDto) {
+		final FreeBoard freeBoard = freeBoardRepository.findById(freeBoardId).orElse(null);
+		if (freeBoard == null || userDto == null) {
+			return;
+		}
+
+		freeBoard.setLikeCount(freeBoard.getLikeCount() + 1);
+
+		freeBoardRepository.save(freeBoard);
+		freeBoardLikeService.like(freeBoardId, userDto.getId());
+	}
+
+	public void unLike(long freeBoardId, UserDto userDto) {
+		final FreeBoard freeBoard = freeBoardRepository.findById(freeBoardId).orElse(null);
+		if (freeBoard == null || userDto == null) {
+			return;
+		}
+
+		if (freeBoard.getLikeCount() > 0) {
+			freeBoard.setLikeCount(freeBoard.getLikeCount() - 1);
+		}
+
+		freeBoardRepository.save(freeBoard);
+		freeBoardLikeService.unLike(freeBoardId, userDto.getId());
 	}
 }

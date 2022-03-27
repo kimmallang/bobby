@@ -52,4 +52,20 @@ public class FreeBoardController {
 
 		return ResponseDto.builder().build();
 	}
+
+	@PostMapping("/free-board/like/{id}")
+	public ResponseDto like(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardService.like(id, user);
+
+		return ResponseDto.builder().build();
+	}
+
+	@DeleteMapping("/free-board/like/{id}")
+	public ResponseDto unLike(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardService.unLike(id, user);
+
+		return ResponseDto.builder().build();
+	}
 }

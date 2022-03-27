@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
+import com.mallang.bobby.domain.freeboard.repository.FreeBoardLikeRepository;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardRepository;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardLikeService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardService;
 
 @DataJpaTest
@@ -22,16 +24,19 @@ import com.mallang.bobby.domain.freeboard.service.FreeBoardService;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 public class FreeBoardServiceTest {
-	private ModelMapper modelMapper;
 	private FreeBoardService freeBoardService;
 
 	@Autowired
 	private FreeBoardRepository freeBoardRepository;
 
+	@Autowired
+	private FreeBoardLikeRepository freeBoardLikeRepository;
+
 	@BeforeEach
 	public void init() {
-		modelMapper = new ModelMapper();
-		freeBoardService = new FreeBoardService(modelMapper, freeBoardRepository);
+		final ModelMapper modelMapper = new ModelMapper();
+		final FreeBoardLikeService freeBoardLikeService = new FreeBoardLikeService(freeBoardLikeRepository);
+		freeBoardService = new FreeBoardService(modelMapper, freeBoardRepository, freeBoardLikeService);
 	}
 
 	@Test
@@ -95,6 +100,6 @@ public class FreeBoardServiceTest {
 		freeBoardService.remove(1L, userDto);
 
 		final FreeBoardDto freeBoardAfter = freeBoardService.get(1L, null);
-		assertTrue(freeBoardAfter.getDeleteYn());
+		assertNull(freeBoardAfter);
 	}
 }
