@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
-import com.mallang.bobby.domain.freeboard.dto.FreeBoardResponse;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoard;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardRepository;
+import com.mallang.bobby.dto.PagingDto;
 import com.mallang.bobby.exception.NotLoginException;
 import com.mallang.bobby.exception.PermissionDeniedException;
 import com.mallang.bobby.exception.UnExpectedException;
@@ -31,11 +31,11 @@ public class FreeBoardService {
 
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
-	public FreeBoardResponse get(int page, int size) {
+	public PagingDto get(int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAllByDeleteYn(false, pageable);
+		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAllByIsDeleted(false, pageable);
 
-		return FreeBoardResponse.builder()
+		return PagingDto.builder()
 			.page(page)
 			.isLast(page >= freeBoardPage.getTotalPages())
 			.items(freeBoardPage.getContent().stream()
@@ -45,7 +45,7 @@ public class FreeBoardService {
 	}
 
 	public FreeBoardDto get(long id, UserDto userDto) {
-		final FreeBoard freeBoard = freeBoardRepository.findByIdAndDeleteYn(id, false).orElse(null);
+		final FreeBoard freeBoard = freeBoardRepository.findByIdAndIsDeleted(id, false).orElse(null);
 
 		if (freeBoard == null) {
 			return null;
@@ -75,7 +75,7 @@ public class FreeBoardService {
 
 			update(freeBoardDto, userDto);
 		} catch (Exception e) {
-			log.error("`FreeBoardService.save(): {}", e.getMessage());
+			log.error("FreeBoardService.save(): {}", e.getMessage());
 			throw e;
 		}
 	}
@@ -93,7 +93,7 @@ public class FreeBoardService {
 			throw new PermissionDeniedException();
 		}
 
-		freeBoard.setDeleteYn(true);
+		freeBoard.setIsDeleted(true);
 
 		freeBoardRepository.save(freeBoard);
 	}
@@ -110,7 +110,7 @@ public class FreeBoardService {
 		freeBoard.setLikeCount(0);
 		freeBoard.setWriterId(userDto.getId());
 		freeBoard.setWriterNickname(userDto.getNickname());
-		freeBoard.setDeleteYn(false);
+		freeBoard.setIsDeleted(false);
 
 		freeBoardRepository.save(freeBoard);
 	}

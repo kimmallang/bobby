@@ -11,6 +11,6 @@ import com.mallang.bobby.domain.freeboard.entity.FreeBoard;
 
 @Repository
 public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> {
-	Page<FreeBoard> findAllByDeleteYn(Boolean deleteYn, Pageable pageable);
-	Optional<FreeBoard> findByIdAndDeleteYn(Long id, Boolean deleteYn);
+	Page<FreeBoard> findAllByIsDeleted(Boolean isDeleted, Pageable pageable);
+	Optional<FreeBoard> findByIdAndIsDeleted(Long id, Boolean isDeleted);
 }

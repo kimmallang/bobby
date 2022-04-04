@@ -63,7 +63,7 @@ public class FreeBoardServiceTest {
 			.build();
 
 		freeBoardService.save(freeBoardDto, userDto);
-		final FreeBoardDto savedFreeBoardDto = freeBoardService.get(1, 20).getItems().get(0);
+		final FreeBoardDto savedFreeBoardDto = (FreeBoardDto)freeBoardService.get(1, 20).getItems().get(0);
 
 		assertEquals("title", savedFreeBoardDto.getTitle());
 		assertEquals("contents", savedFreeBoardDto.getContents());
@@ -92,7 +92,7 @@ public class FreeBoardServiceTest {
 	@Test
 	public void delete() {
 		final FreeBoardDto freeBoardBefore = freeBoardService.get(1L, null);
-		assertFalse(freeBoardBefore.getDeleteYn());
+		assertFalse(freeBoardBefore.getIsDeleted());
 
 		UserDto userDto = UserDto.builder()
 			.id(freeBoardBefore.getWriterId())

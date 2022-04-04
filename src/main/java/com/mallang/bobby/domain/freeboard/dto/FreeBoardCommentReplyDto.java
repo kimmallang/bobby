@@ -12,14 +12,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoardDto {
+public class FreeBoardCommentReplyDto {
 	private Long id;
-	private String title;
+	private Long freeBoardCommentId;
 	private String contents;
 	private Long writerId;
 	private String writerNickname;
-	private Integer likeCount;
-	private Integer commentsCount;
 	private Boolean isDeleted;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -27,7 +25,4 @@ public class FreeBoardDto {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
-
-	private Boolean isMine;
-	private Boolean isLike;
 }
