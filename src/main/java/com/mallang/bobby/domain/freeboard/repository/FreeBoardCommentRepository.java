@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
+import com.mallang.bobby.domain.freeboard.repository.freeBoardCommentRepository.CustomFreeBoardCommentRepository;
 
 @Repository
-public interface FreeBoardCommentRepository extends JpaRepository<FreeBoardComment, Long> {
-	Page<FreeBoardComment> findAllByFreeBoardId(Long longs, Pageable pageable);
+public interface FreeBoardCommentRepository extends JpaRepository<FreeBoardComment, Long>, CustomFreeBoardCommentRepository {
+	Page<FreeBoardComment> findAllByFreeBoardId(Long freeBoardId, Pageable pageable);
 }

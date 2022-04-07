@@ -9,15 +9,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mallang.bobby.config.TestQuerydslConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
 
+@Import(TestQuerydslConfig.class)
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)
@@ -52,10 +58,15 @@ public class FreeBoardCommentServiceTest {
 			.nickname("nickname")
 			.build();
 
-		freeBoardCommentService.save(freeBoardCommentDto, userDto);
-		final FreeBoardCommentDto savedFreeBoardCommentDto = (FreeBoardCommentDto)freeBoardCommentService.get(1L, 1, 20).getItems().get(0);
+		final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
+		final Pageable pageable = PageRequest.of(0, 20, sortByIdDesc);
+		long beforeCount = freeBoardCommentRepository.findAllByFreeBoardId(1L, pageable).getTotalElements();
 
-		assertEquals("contents", savedFreeBoardCommentDto.getContents());
+		freeBoardCommentService.save(freeBoardCommentDto, userDto);
+
+		long afterCount = freeBoardCommentRepository.findAllByFreeBoardId(1L, pageable).getTotalElements();
+
+		assertEquals(beforeCount + 1, afterCount);
 	}
 
 	@Test

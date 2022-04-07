@@ -1,6 +1,7 @@
 package com.mallang.bobby.domain.freeboard.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,6 @@ public class FreeBoardCommentDto {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
+
+	private List<FreeBoardCommentReplyDto> commentReplies;
 }

@@ -32,7 +32,7 @@ public class FreeBoardCommentService {
 
 	public PagingDto get(long freeBoardId, int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoardComment> freeBoardCommentPage = freeBoardCommentRepository.findAllByFreeBoardId(freeBoardId, pageable);
+		final Page<FreeBoardComment> freeBoardCommentPage = freeBoardCommentRepository.findAllByFreeBoardIdWithReply(freeBoardId, pageable);
 
 		return PagingDto.builder()
 			.page(page)
