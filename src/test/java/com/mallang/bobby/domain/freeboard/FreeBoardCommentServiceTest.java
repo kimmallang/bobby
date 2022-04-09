@@ -20,8 +20,11 @@ import com.mallang.bobby.config.TestQuerydslConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
+import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentReplyRepository;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
+import com.mallang.bobby.dto.PagingDto;
 
 @Import(TestQuerydslConfig.class)
 @DataJpaTest
@@ -35,15 +38,21 @@ public class FreeBoardCommentServiceTest {
 	@Autowired
 	private FreeBoardCommentRepository freeBoardCommentRepository;
 
+	@Autowired
+	private FreeBoardCommentReplyRepository freeBoardCommentReplyRepository;
+
 	@BeforeEach
 	public void init() {
 		modelMapper = new ModelMapper();
-		freeBoardCommentService = new FreeBoardCommentService(modelMapper, freeBoardCommentRepository);
+		final FreeBoardCommentReplyService freeBoardCommentReplyService = new FreeBoardCommentReplyService(modelMapper, freeBoardCommentReplyRepository);
+		freeBoardCommentService = new FreeBoardCommentService(modelMapper, freeBoardCommentRepository, freeBoardCommentReplyService);
 	}
 
 	@Test
 	public void getList() {
-		assertEquals(1, freeBoardCommentService.get(1L, 1, 1).getItems().size());
+		PagingDto<FreeBoardCommentDto> freeBoardComments = freeBoardCommentService.get(1L, 1, 1);
+		assertEquals(1, freeBoardComments.getItems().size());
+		assertEquals(1, freeBoardComments.getItems().get(0).getCommentReplyPage().getItems().size());
 	}
 
 	@Test

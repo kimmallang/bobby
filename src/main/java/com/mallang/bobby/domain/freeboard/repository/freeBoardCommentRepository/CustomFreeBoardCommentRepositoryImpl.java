@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomFreeBoardCommentRepositoryImpl implements CustomFreeBoardCommentRepository{
+public class CustomFreeBoardCommentRepositoryImpl implements CustomFreeBoardCommentRepository {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override

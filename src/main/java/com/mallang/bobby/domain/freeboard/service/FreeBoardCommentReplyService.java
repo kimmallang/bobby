@@ -30,11 +30,11 @@ public class FreeBoardCommentReplyService {
 
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
-	public PagingDto get(long freeBoardId, int page, int size) {
+	public PagingDto<FreeBoardCommentReplyDto> get(long freeBoardCommentId, int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoardCommentReply> freeBoardCommentReplyPage = freeBoardCommentReplyRepository.findAllByFreeBoardCommentId(freeBoardId, pageable);
+		final Page<FreeBoardCommentReply> freeBoardCommentReplyPage = freeBoardCommentReplyRepository.findAllByFreeBoardCommentId(freeBoardCommentId, pageable);
 
-		return PagingDto.builder()
+		return PagingDto.<FreeBoardCommentReplyDto>builder()
 			.page(page)
 			.isLast(page >= freeBoardCommentReplyPage.getTotalPages())
 			.items(freeBoardCommentReplyPage.getContent().stream()

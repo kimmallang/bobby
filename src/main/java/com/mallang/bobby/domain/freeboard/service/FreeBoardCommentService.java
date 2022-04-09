@@ -1,5 +1,6 @@
 package com.mallang.bobby.domain.freeboard.service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -27,14 +28,33 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeBoardCommentService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardCommentRepository freeBoardCommentRepository;
+	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
+
+	private static final int commentReplyPage = 1;
+	private static final int commentReplySize = 10;
 
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
-	public PagingDto get(long freeBoardId, int page, int size) {
+	public PagingDto<FreeBoardCommentDto> get(long freeBoardId, int page, int size) {
+		final PagingDto<FreeBoardCommentDto> commentPage = this.getComment(freeBoardId, page, size);
+
+		loadCommentReply(commentPage);
+
+		return commentPage;
+	}
+
+	private void loadCommentReply(PagingDto<FreeBoardCommentDto> commentPage) {
+		final List<FreeBoardCommentDto> comments = commentPage.getItems();
+		comments
+			.forEach(comment -> comment.setCommentReplyPage(freeBoardCommentReplyService.get(comment.getId(),
+				commentReplyPage, commentReplySize)));
+	}
+
+	private PagingDto<FreeBoardCommentDto> getComment(long freeBoardId, int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
 		final Page<FreeBoardComment> freeBoardCommentPage = freeBoardCommentRepository.findAllByFreeBoardIdWithReply(freeBoardId, pageable);
 
-		return PagingDto.builder()
+		return PagingDto.<FreeBoardCommentDto>builder()
 			.page(page)
 			.isLast(page >= freeBoardCommentPage.getTotalPages())
 			.items(freeBoardCommentPage.getContent().stream()

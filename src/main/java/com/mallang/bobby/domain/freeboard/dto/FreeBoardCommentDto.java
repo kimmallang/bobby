@@ -1,9 +1,11 @@
 package com.mallang.bobby.domain.freeboard.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mallang.bobby.dto.PagingDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,5 +29,5 @@ public class FreeBoardCommentDto {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
 
-	private List<FreeBoardCommentReplyDto> commentReplies;
+	private PagingDto<FreeBoardCommentReplyDto> commentReplyPage;
 }

@@ -31,11 +31,11 @@ public class FreeBoardService {
 
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
 
-	public PagingDto get(int page, int size) {
+	public PagingDto<FreeBoardDto> get(int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
 		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAllByIsDeleted(false, pageable);
 
-		return PagingDto.builder()
+		return PagingDto.<FreeBoardDto>builder()
 			.page(page)
 			.isLast(page >= freeBoardPage.getTotalPages())
 			.items(freeBoardPage.getContent().stream()
