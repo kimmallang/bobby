@@ -13,14 +13,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mallang.bobby.config.TestQuerydslConfig;
+import com.mallang.bobby.config.TestConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentReplyDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardCommentReply;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentReplyRepository;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
 
-@Import(TestQuerydslConfig.class)
+@Import(TestConfig.class)
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)

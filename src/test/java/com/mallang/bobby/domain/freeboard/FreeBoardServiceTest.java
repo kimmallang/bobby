@@ -9,9 +9,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mallang.bobby.config.TestConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardLikeRepository;
@@ -19,6 +21,7 @@ import com.mallang.bobby.domain.freeboard.repository.FreeBoardRepository;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardLikeService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardService;
 
+@Import(TestConfig.class)
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)

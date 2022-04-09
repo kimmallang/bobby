@@ -16,7 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mallang.bobby.config.TestQuerydslConfig;
+import com.mallang.bobby.config.TestConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
@@ -26,7 +26,7 @@ import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
 import com.mallang.bobby.dto.PagingDto;
 
-@Import(TestQuerydslConfig.class)
+@Import(TestConfig.class)
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)
