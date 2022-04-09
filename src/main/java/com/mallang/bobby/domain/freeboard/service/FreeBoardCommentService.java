@@ -80,25 +80,24 @@ public class FreeBoardCommentService {
 		return freeBoardCommentDto;
 	}
 
-	public void save(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
+	public Long save(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
 		try {
 			if (userDto == null || userDto.getId() == null) {
 				throw new NotLoginException();
 			}
 
 			if (freeBoardCommentDto.getId() == null) {
-				insert(freeBoardCommentDto, userDto);
-				return;
+				return insert(freeBoardCommentDto, userDto);
 			}
 
-			update(freeBoardCommentDto, userDto);
+			return update(freeBoardCommentDto, userDto);
 		} catch (Exception e) {
 			log.error("FreeBoardCommentService.save(): {}", e.getMessage());
 			throw e;
 		}
 	}
 
-	private void insert(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
+	private Long insert(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
 		if (userDto == null) {
 			throw new NotLoginException();
 		}
@@ -110,10 +109,10 @@ public class FreeBoardCommentService {
 		freeBoardComment.setWriterNickname(userDto.getNickname());
 		freeBoardComment.setIsDeleted(false);
 
-		freeBoardCommentRepository.save(freeBoardComment);
+		return freeBoardCommentRepository.save(freeBoardComment).getId();
 	}
 
-	private void update(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
+	private Long update(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
 		if (userDto == null) {
 			throw new NotLoginException();
 		}
@@ -128,7 +127,7 @@ public class FreeBoardCommentService {
 
 		freeBoardComment.setContents(freeBoardCommentDto.getContents());
 
-		freeBoardCommentRepository.save(freeBoardComment);
+		return freeBoardCommentRepository.save(freeBoardComment).getId();
 	}
 
 	public void remove(long id, UserDto userDto) {

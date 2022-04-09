@@ -51,8 +51,8 @@ public class FreeBoardCommentServiceTest {
 	@Test
 	public void getList() {
 		PagingDto<FreeBoardCommentDto> freeBoardComments = freeBoardCommentService.get(1L, 1, 1);
-		assertEquals(1, freeBoardComments.getItems().size());
-		assertEquals(1, freeBoardComments.getItems().get(0).getCommentReplyPage().getItems().size());
+		assertTrue(freeBoardComments.getItems().size() > 0);
+		assertTrue(freeBoardComments.getItems().get(0).getCommentReplyPage().getItems().size() > 0);
 	}
 
 	@Test

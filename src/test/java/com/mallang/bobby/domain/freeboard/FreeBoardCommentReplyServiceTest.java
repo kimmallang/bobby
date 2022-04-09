@@ -40,7 +40,7 @@ public class FreeBoardCommentReplyServiceTest {
 
 	@Test
 	public void getList() {
-		assertEquals(1, freeBoardCommentReplyService.get(1L, 1, 1).getItems().size());
+		assertTrue(freeBoardCommentReplyService.get(1L, 1, 1).getItems().size() > 0);
 	}
 
 	@Test

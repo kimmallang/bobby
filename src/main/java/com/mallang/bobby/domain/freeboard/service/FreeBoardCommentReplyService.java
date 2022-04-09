@@ -60,25 +60,24 @@ public class FreeBoardCommentReplyService {
 		return freeBoardCommentReplyDto;
 	}
 
-	public void save(FreeBoardCommentReplyDto freeBoardCommentReplyDto, UserDto userDto) {
+	public Long save(FreeBoardCommentReplyDto freeBoardCommentReplyDto, UserDto userDto) {
 		try {
 			if (userDto == null || userDto.getId() == null) {
 				throw new NotLoginException();
 			}
 
 			if (freeBoardCommentReplyDto.getId() == null) {
-				insert(freeBoardCommentReplyDto, userDto);
-				return;
+				return insert(freeBoardCommentReplyDto, userDto);
 			}
 
-			update(freeBoardCommentReplyDto, userDto);
+			return update(freeBoardCommentReplyDto, userDto);
 		} catch (Exception e) {
 			log.error("FreeBoardCommentReplyService.save(): {}", e.getMessage());
 			throw e;
 		}
 	}
 
-	private void insert(FreeBoardCommentReplyDto freeBoardCommentReplyDto, UserDto userDto) {
+	private Long insert(FreeBoardCommentReplyDto freeBoardCommentReplyDto, UserDto userDto) {
 		if (userDto == null) {
 			throw new NotLoginException();
 		}
@@ -90,10 +89,10 @@ public class FreeBoardCommentReplyService {
 		freeBoardCommentReply.setWriterNickname(userDto.getNickname());
 		freeBoardCommentReply.setIsDeleted(false);
 
-		freeBoardCommentReplyRepository.save(freeBoardCommentReply);
+		return freeBoardCommentReplyRepository.save(freeBoardCommentReply).getId();
 	}
 
-	private void update(FreeBoardCommentReplyDto freeBoardCommentReplyDto, UserDto userDto) {
+	private Long update(FreeBoardCommentReplyDto freeBoardCommentReplyDto, UserDto userDto) {
 		if (userDto == null) {
 			throw new NotLoginException();
 		}
@@ -108,7 +107,7 @@ public class FreeBoardCommentReplyService {
 
 		freeBoardCommentReply.setContents(freeBoardCommentReplyDto.getContents());
 
-		freeBoardCommentReplyRepository.save(freeBoardCommentReply);
+		return freeBoardCommentReplyRepository.save(freeBoardCommentReply).getId();
 	}
 
 	public void remove(long id, UserDto userDto) {
