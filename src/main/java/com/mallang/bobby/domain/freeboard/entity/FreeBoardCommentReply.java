@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name =  "free_board_comment_reply")
+@Table(name = "free_board_comment_reply")
 @NoArgsConstructor
 @AllArgsConstructor
 public class FreeBoardCommentReply extends BaseEntity {
@@ -38,6 +38,9 @@ public class FreeBoardCommentReply extends BaseEntity {
 
 	@Column(name = "writer_nickname")
 	private String writerNickname;
+
+	@Column(name = "like_count")
+	private Integer likeCount;
 
 	@Column(name = "delete_yn")
 	private Boolean isDeleted;

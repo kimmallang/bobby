@@ -24,6 +24,13 @@ import lombok.RequiredArgsConstructor;
 public class FreeBoardCommentReplyController {
 	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
 
+	@GetMapping("/free-board-comment-reply/{freeBoardCommentId}")
+	public ResponseDto get(@PathVariable long freeBoardCommentId, int page, int size) {
+		return ResponseDto.builder()
+			.data(freeBoardCommentReplyService.get(freeBoardCommentId, page, size))
+			.build();
+	}
+
 	@PostMapping("/free-board-comment-reply")
 	public ResponseDto save(@RequestBody FreeBoardCommentReplyDto freeBoardCommentReplyDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");

@@ -22,7 +22,6 @@ import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentReplyRepository;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
-import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
 import com.mallang.bobby.dto.PagingDto;
 
@@ -38,21 +37,16 @@ public class FreeBoardCommentServiceTest {
 	@Autowired
 	private FreeBoardCommentRepository freeBoardCommentRepository;
 
-	@Autowired
-	private FreeBoardCommentReplyRepository freeBoardCommentReplyRepository;
-
 	@BeforeEach
 	public void init() {
 		modelMapper = new ModelMapper();
-		final FreeBoardCommentReplyService freeBoardCommentReplyService = new FreeBoardCommentReplyService(modelMapper, freeBoardCommentReplyRepository);
-		freeBoardCommentService = new FreeBoardCommentService(modelMapper, freeBoardCommentRepository, freeBoardCommentReplyService);
+		freeBoardCommentService = new FreeBoardCommentService(modelMapper, freeBoardCommentRepository);
 	}
 
 	@Test
 	public void getList() {
 		PagingDto<FreeBoardCommentDto> freeBoardComments = freeBoardCommentService.get(1L, 1, 1);
 		assertTrue(freeBoardComments.getItems().size() > 0);
-		assertTrue(freeBoardComments.getItems().get(0).getCommentReplyPage().getItems().size() > 0);
 	}
 
 	@Test

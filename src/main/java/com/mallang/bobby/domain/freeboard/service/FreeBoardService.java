@@ -106,7 +106,7 @@ public class FreeBoardService {
 		final FreeBoard freeBoard = new FreeBoard();
 		freeBoard.setTitle(freeBoardDto.getTitle());
 		freeBoard.setContents(freeBoardDto.getContents());
-		freeBoard.setCommentsCount(0);
+		freeBoard.setCommentCount(0);
 		freeBoard.setLikeCount(0);
 		freeBoard.setWriterId(userDto.getId());
 		freeBoard.setWriterNickname(userDto.getNickname());

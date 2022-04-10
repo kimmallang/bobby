@@ -56,7 +56,7 @@ public class FreeBoardCommentReplyServiceTest {
 			.build();
 
 		freeBoardCommentReplyService.save(freeBoardCommentReplyDto, userDto);
-		final FreeBoardCommentReplyDto savedFreeBoardCommentReplyDto = (FreeBoardCommentReplyDto)freeBoardCommentReplyService.get(1L, 1, 20).getItems().get(0);
+		final FreeBoardCommentReplyDto savedFreeBoardCommentReplyDto = freeBoardCommentReplyService.get(1L, 1, 20).getItems().get(0);
 
 		assertEquals("contents", savedFreeBoardCommentReplyDto.getContents());
 	}

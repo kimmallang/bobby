@@ -87,6 +87,7 @@ public class FreeBoardCommentReplyService {
 		freeBoardCommentReply.setContents(freeBoardCommentReplyDto.getContents());
 		freeBoardCommentReply.setWriterId(userDto.getId());
 		freeBoardCommentReply.setWriterNickname(userDto.getNickname());
+		freeBoardCommentReply.setLikeCount(0);
 		freeBoardCommentReply.setIsDeleted(false);
 
 		return freeBoardCommentReplyRepository.save(freeBoardCommentReply).getId();

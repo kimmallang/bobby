@@ -18,6 +18,7 @@ public class FreeBoardCommentReplyDto {
 	private String contents;
 	private Long writerId;
 	private String writerNickname;
+	private Integer likeCount;
 	private Boolean isDeleted;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")

@@ -21,6 +21,8 @@ public class FreeBoardCommentDto {
 	private String contents;
 	private Long writerId;
 	private String writerNickname;
+	private Integer likeCount;
+	private Integer commentReplyCount;
 	private Boolean isDeleted;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -28,6 +30,4 @@ public class FreeBoardCommentDto {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
-
-	private PagingDto<FreeBoardCommentReplyDto> commentReplyPage;
 }

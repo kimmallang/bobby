@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name =  "free_board_like")
+@Table(name = "free_board_like")
 @NoArgsConstructor
 @AllArgsConstructor
 public class FreeBoardLike {
