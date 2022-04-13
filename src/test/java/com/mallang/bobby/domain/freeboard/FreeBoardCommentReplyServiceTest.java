@@ -40,7 +40,7 @@ public class FreeBoardCommentReplyServiceTest {
 
 	@Test
 	public void getList() {
-		assertTrue(freeBoardCommentReplyService.get(1L, 1, 1).getItems().size() > 0);
+		assertTrue(freeBoardCommentReplyService.get(1L, 0, 1).getItems().size() > 0);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class FreeBoardCommentReplyServiceTest {
 			.build();
 
 		freeBoardCommentReplyService.save(freeBoardCommentReplyDto, userDto);
-		final FreeBoardCommentReplyDto savedFreeBoardCommentReplyDto = freeBoardCommentReplyService.get(1L, 1, 20).getItems().get(0);
+		final FreeBoardCommentReplyDto savedFreeBoardCommentReplyDto = freeBoardCommentReplyService.get(1L, 0, 20).getItems().get(0);
 
 		assertEquals("contents", savedFreeBoardCommentReplyDto.getContents());
 	}

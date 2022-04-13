@@ -1,5 +1,7 @@
 package com.mallang.bobby.domain.freeboard.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -9,11 +11,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
+import com.mallang.bobby.dto.PagingCursorDto;
 import com.mallang.bobby.dto.PagingDto;
 import com.mallang.bobby.exception.NotLoginException;
 import com.mallang.bobby.exception.PermissionDeniedException;
@@ -29,18 +33,26 @@ public class FreeBoardCommentService {
 	private final FreeBoardCommentRepository freeBoardCommentRepository;
 	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
 
-	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
-	private static final int replyPage = 1;
+	private static final int replyCursor = 0;
 	private static final int replySize = 20;
 
-	public PagingDto<FreeBoardCommentDto> get(long freeBoardId, int page, int size) {
-		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoardComment> freeBoardCommentPage = freeBoardCommentRepository.findAllByFreeBoardIdWithReply(freeBoardId, pageable);
+	public PagingCursorDto<FreeBoardCommentDto> get(long freeBoardId, long cursor, int size) {
+		final List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findAllByFreeBoardIdOrderByIdDesc(freeBoardId, cursor, size);
+		if (CollectionUtils.isEmpty(freeBoardCommentList)) {
+			return PagingCursorDto.<FreeBoardCommentDto>builder()
+				.cursor(null)
+				.isLast(true)
+				.items(new ArrayList<>())
+				.build();
+		}
 
-		return PagingDto.<FreeBoardCommentDto>builder()
-			.page(page)
-			.isLast(page >= freeBoardCommentPage.getTotalPages())
-			.items(freeBoardCommentPage.getContent().stream()
+		final long nextCursor = freeBoardCommentList.get(freeBoardCommentList.size()-1).getId();
+		final boolean existNextPage = freeBoardCommentRepository.existsByFreeBoardIdAndIdLessThan(freeBoardId, nextCursor);
+
+		return PagingCursorDto.<FreeBoardCommentDto>builder()
+			.cursor(nextCursor)
+			.isLast(!existNextPage)
+			.items(freeBoardCommentList.stream()
 				.map(this::mapToDto)
 				.collect(Collectors.toList()))
 			.build();
@@ -59,7 +71,7 @@ public class FreeBoardCommentService {
 		}
 
 		final FreeBoardCommentDto freeBoardCommentDto = modelMapper.map(freeBoardComment, FreeBoardCommentDto.class);
-		freeBoardCommentDto.setCommentReplyPage(freeBoardCommentReplyService.get(freeBoardCommentDto.getFreeBoardId(), replyPage, replySize));
+		freeBoardCommentDto.setCommentReplyPage(freeBoardCommentReplyService.get(freeBoardCommentDto.getId(), replyCursor, replySize));
 
 		return freeBoardCommentDto;
 	}

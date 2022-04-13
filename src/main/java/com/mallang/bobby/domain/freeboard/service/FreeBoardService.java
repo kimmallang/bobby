@@ -1,20 +1,19 @@
 package com.mallang.bobby.domain.freeboard.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoard;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardRepository;
-import com.mallang.bobby.dto.PagingDto;
+import com.mallang.bobby.dto.PagingCursorDto;
 import com.mallang.bobby.exception.NotLoginException;
 import com.mallang.bobby.exception.PermissionDeniedException;
 import com.mallang.bobby.exception.UnExpectedException;
@@ -29,16 +28,23 @@ public class FreeBoardService {
 	private final FreeBoardRepository freeBoardRepository;
 	private final FreeBoardLikeService freeBoardLikeService;
 
-	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
+	public PagingCursorDto<FreeBoardDto> get(long cursor, int size) {
+		final List<FreeBoard> freeBoardList = freeBoardRepository.findAllOrderByIdDesc(cursor, size);
+		if (CollectionUtils.isEmpty(freeBoardList)) {
+			return PagingCursorDto.<FreeBoardDto>builder()
+				.cursor(null)
+				.isLast(true)
+				.items(new ArrayList<>())
+				.build();
+		}
 
-	public PagingDto<FreeBoardDto> get(int page, int size) {
-		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoard> freeBoardPage = freeBoardRepository.findAllByIsDeleted(false, pageable);
+		final long nextCursor = freeBoardList.get(freeBoardList.size()-1).getId();
+		final boolean existNextPage = freeBoardRepository.existsByIsDeletedFalseAndIdLessThan(nextCursor);
 
-		return PagingDto.<FreeBoardDto>builder()
-			.page(page)
-			.isLast(page >= freeBoardPage.getTotalPages())
-			.items(freeBoardPage.getContent().stream()
+		return PagingCursorDto.<FreeBoardDto>builder()
+			.cursor(nextCursor)
+			.isLast(!existNextPage)
+			.items(freeBoardList.stream()
 				.map(freeBoard -> modelMapper.map(freeBoard, FreeBoardDto.class))
 				.collect(Collectors.toList()))
 			.build();

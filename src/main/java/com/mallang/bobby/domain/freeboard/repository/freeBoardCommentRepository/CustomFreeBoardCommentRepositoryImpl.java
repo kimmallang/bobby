@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.entity.QFreeBoardComment;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,21 +20,24 @@ public class CustomFreeBoardCommentRepositoryImpl implements CustomFreeBoardComm
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<FreeBoardComment> findAllByFreeBoardIdWithReply(Long freeBoardId, Pageable pageable) {
+	public List<FreeBoardComment> findAllByFreeBoardIdOrderByIdDesc(Long freeBoardId, Long cursor, int size) {
 		final QFreeBoardComment freeBoardComment = QFreeBoardComment.freeBoardComment;
-		final List<FreeBoardComment> freeBoardComments = jpaQueryFactory
+		return jpaQueryFactory
 			.select(freeBoardComment)
 			.from(freeBoardComment)
-			.where(freeBoardComment.freeBoardId.eq(freeBoardId))
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
+			.where(getWhereClause(freeBoardId, cursor))
+			.limit(size)
+			.orderBy(freeBoardComment.id.desc())
 			.fetch();
+	}
 
-		final JPAQuery<FreeBoardComment> countQuery = jpaQueryFactory
-			.select(freeBoardComment)
-			.from(freeBoardComment)
-			.where(freeBoardComment.freeBoardId.eq(freeBoardId));
+	private BooleanExpression getWhereClause(Long freeBoardId, Long cursor) {
+		final boolean isFirstPage = cursor <= 0;
+		final QFreeBoardComment freeBoardComment = QFreeBoardComment.freeBoardComment;
+		if (isFirstPage) {
+			return freeBoardComment.freeBoardId.eq(freeBoardId);
+		}
 
-		return PageableExecutionUtils.getPage(freeBoardComments, pageable, countQuery::fetchCount);
+		return freeBoardComment.freeBoardId.eq(freeBoardId).and(freeBoardComment.id.lt(cursor));
 	}
 }

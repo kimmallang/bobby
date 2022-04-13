@@ -23,9 +23,9 @@ public class FreeBoardCommentReplyController {
 	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
 
 	@GetMapping("/free-board-comment-reply/{freeBoardCommentId}")
-	public ResponseDto get(@PathVariable long freeBoardCommentId, int page, int size) {
+	public ResponseDto get(@PathVariable long freeBoardCommentId, long cursor, int size) {
 		return ResponseDto.builder()
-			.data(freeBoardCommentReplyService.get(freeBoardCommentId, page, size))
+			.data(freeBoardCommentReplyService.get(freeBoardCommentId, cursor, size))
 			.build();
 	}
 

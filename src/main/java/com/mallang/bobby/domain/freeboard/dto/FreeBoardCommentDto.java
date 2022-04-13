@@ -3,6 +3,7 @@ package com.mallang.bobby.domain.freeboard.dto;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mallang.bobby.dto.PagingCursorDto;
 import com.mallang.bobby.dto.PagingDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,5 +30,5 @@ public class FreeBoardCommentDto {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
 
-	private PagingDto<FreeBoardCommentReplyDto> commentReplyPage;
+	private PagingCursorDto<FreeBoardCommentReplyDto> commentReplyPage;
 }

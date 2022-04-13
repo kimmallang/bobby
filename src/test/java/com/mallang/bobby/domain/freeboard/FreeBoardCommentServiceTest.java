@@ -24,7 +24,7 @@ import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentReplyReposi
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
-import com.mallang.bobby.dto.PagingDto;
+import com.mallang.bobby.dto.PagingCursorDto;
 
 @Import(TestConfig.class)
 @DataJpaTest
@@ -50,8 +50,13 @@ public class FreeBoardCommentServiceTest {
 
 	@Test
 	public void getList() {
-		PagingDto<FreeBoardCommentDto> freeBoardComments = freeBoardCommentService.get(1L, 1, 1);
-		assertTrue(freeBoardComments.getItems().size() > 0);
+		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage = freeBoardCommentService.get(1L, 0, 3);
+		assertTrue(freeBoardCommentPage.getItems().size() > 0);
+		assertFalse(freeBoardCommentPage.getIsLast());
+
+		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage2 = freeBoardCommentService.get(1L, freeBoardCommentPage.getCursor(), 20);
+		assertTrue(freeBoardCommentPage2.getItems().size() > 0);
+		assertTrue(freeBoardCommentPage2.getIsLast());
 	}
 
 	@Test

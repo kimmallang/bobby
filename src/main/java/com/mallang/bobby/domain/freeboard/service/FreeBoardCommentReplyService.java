@@ -1,5 +1,7 @@
 package com.mallang.bobby.domain.freeboard.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -9,11 +11,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
+import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentReplyDto;
+import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardCommentReply;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentReplyRepository;
+import com.mallang.bobby.dto.PagingCursorDto;
 import com.mallang.bobby.dto.PagingDto;
 import com.mallang.bobby.exception.NotLoginException;
 import com.mallang.bobby.exception.PermissionDeniedException;
@@ -28,16 +34,23 @@ public class FreeBoardCommentReplyService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardCommentReplyRepository freeBoardCommentReplyRepository;
 
-	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
+	public PagingCursorDto<FreeBoardCommentReplyDto> get(long freeBoardCommentId, long cursor, int size) {
+		final List<FreeBoardCommentReply> freeBoardCommentReplyList = freeBoardCommentReplyRepository.findAllByFreeBoardCommentIdOrderByIdDesc(freeBoardCommentId, cursor, size);
+		if (CollectionUtils.isEmpty(freeBoardCommentReplyList)) {
+			return PagingCursorDto.<FreeBoardCommentReplyDto>builder()
+				.cursor(null)
+				.isLast(true)
+				.items(new ArrayList<>())
+				.build();
+		}
 
-	public PagingDto<FreeBoardCommentReplyDto> get(long freeBoardCommentId, int page, int size) {
-		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
-		final Page<FreeBoardCommentReply> freeBoardCommentReplyPage = freeBoardCommentReplyRepository.findAllByFreeBoardCommentId(freeBoardCommentId, pageable);
+		final long nextCursor = freeBoardCommentReplyList.get(freeBoardCommentReplyList.size()-1).getId();
+		final boolean existNextPage = freeBoardCommentReplyRepository.existsByFreeBoardCommentIdAndIdLessThan(freeBoardCommentId, nextCursor);
 
-		return PagingDto.<FreeBoardCommentReplyDto>builder()
-			.page(page)
-			.isLast(page >= freeBoardCommentReplyPage.getTotalPages())
-			.items(freeBoardCommentReplyPage.getContent().stream()
+		return PagingCursorDto.<FreeBoardCommentReplyDto>builder()
+			.cursor(nextCursor)
+			.isLast(!existNextPage)
+			.items(freeBoardCommentReplyList.stream()
 				.map(this::mapToDto)
 				.collect(Collectors.toList()))
 			.build();

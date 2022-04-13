@@ -23,9 +23,9 @@ public class FreeBoardController {
 	private final FreeBoardService freeBoardService;
 
 	@GetMapping("/free-board")
-	public ResponseDto get(int page, int size) {
+	public ResponseDto get(long cursor, int size) {
 		return ResponseDto.builder()
-			.data(freeBoardService.get(page, size))
+			.data(freeBoardService.get(cursor, size))
 			.build();
 	}
 
