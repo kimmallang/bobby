@@ -24,7 +24,7 @@ public class CustomFreeBoardCommentRepositoryImpl implements CustomFreeBoardComm
 		final List<FreeBoardComment> freeBoardComments = jpaQueryFactory
 			.select(freeBoardComment)
 			.from(freeBoardComment)
-			.where(freeBoardComment.id.eq(freeBoardId))
+			.where(freeBoardComment.freeBoardId.eq(freeBoardId))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -32,7 +32,7 @@ public class CustomFreeBoardCommentRepositoryImpl implements CustomFreeBoardComm
 		final JPAQuery<FreeBoardComment> countQuery = jpaQueryFactory
 			.select(freeBoardComment)
 			.from(freeBoardComment)
-			.where(freeBoardComment.id.eq(freeBoardId));
+			.where(freeBoardComment.freeBoardId.eq(freeBoardId));
 
 		return PageableExecutionUtils.getPage(freeBoardComments, pageable, countQuery::fetchCount);
 	}

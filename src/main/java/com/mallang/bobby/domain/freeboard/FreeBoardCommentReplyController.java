@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
-import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentReplyDto;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
-import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
 import com.mallang.bobby.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 

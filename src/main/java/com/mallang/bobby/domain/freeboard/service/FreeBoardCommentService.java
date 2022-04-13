@@ -27,8 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeBoardCommentService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardCommentRepository freeBoardCommentRepository;
+	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
 
 	private static final Sort sortByIdDesc = Sort.by(Sort.Direction.DESC, "id");
+	private static final int replyPage = 1;
+	private static final int replySize = 20;
 
 	public PagingDto<FreeBoardCommentDto> get(long freeBoardId, int page, int size) {
 		final Pageable pageable = PageRequest.of((page - 1), size, sortByIdDesc);
@@ -41,6 +44,24 @@ public class FreeBoardCommentService {
 				.map(this::mapToDto)
 				.collect(Collectors.toList()))
 			.build();
+	}
+
+	public FreeBoardCommentDto get(long freeBoardId, long id) {
+		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(id).orElse(null);
+		if (freeBoardComment == null) {
+			return null;
+		}
+
+		final boolean isBadRequest = !freeBoardComment.getFreeBoardId().equals(freeBoardId);
+		final boolean isDeleted = freeBoardComment.getIsDeleted();
+		if (isBadRequest || isDeleted) {
+			return null;
+		}
+
+		final FreeBoardCommentDto freeBoardCommentDto = modelMapper.map(freeBoardComment, FreeBoardCommentDto.class);
+		freeBoardCommentDto.setCommentReplyPage(freeBoardCommentReplyService.get(freeBoardCommentDto.getFreeBoardId(), replyPage, replySize));
+
+		return freeBoardCommentDto;
 	}
 
 	private FreeBoardCommentDto mapToDto(FreeBoardComment freeBoardComment) {

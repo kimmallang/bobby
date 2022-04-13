@@ -30,6 +30,13 @@ public class FreeBoardCommentController {
 			.build();
 	}
 
+	@GetMapping("/free-board-comment/{freeBoardId}/{id}")
+	public ResponseDto getWithReply(@PathVariable long freeBoardId, @PathVariable long id) {
+		return ResponseDto.builder()
+			.data(freeBoardCommentService.get(freeBoardId, id))
+			.build();
+	}
+
 	@PostMapping("/free-board-comment")
 	public ResponseDto save(@RequestBody FreeBoardCommentDto freeBoardCommentDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
