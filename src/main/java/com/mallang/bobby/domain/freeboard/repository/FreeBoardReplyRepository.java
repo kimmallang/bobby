@@ -10,4 +10,5 @@ import com.mallang.bobby.domain.freeboard.repository.freeBoardReplyRepository.Cu
 public interface FreeBoardReplyRepository
 	extends JpaRepository<FreeBoardReply, Long>, CustomFreeBoardReplyRepository {
 	Boolean existsByFreeBoardCommentIdAndIdLessThan(Long freeBoardCommentId, Long id);
+	Integer countAllByFreeBoardCommentIdAndIsDeletedFalse(Long freeBoardId);
 }

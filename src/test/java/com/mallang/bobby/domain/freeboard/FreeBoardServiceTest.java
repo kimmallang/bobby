@@ -105,4 +105,12 @@ public class FreeBoardServiceTest {
 		final FreeBoardDto freeBoardAfter = freeBoardService.get(1L, null);
 		assertNull(freeBoardAfter);
 	}
+
+	@Test
+	public void updateCommentCount() {
+		freeBoardService.updateCommentCount(1L, 9999);
+		final FreeBoardDto freeBoardAfter = freeBoardService.get(1L, null);
+
+		assertEquals(9999, freeBoardAfter.getCommentCount());
+	}
 }

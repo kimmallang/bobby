@@ -120,6 +120,14 @@ public class FreeBoardCommentServiceTest {
 		assertNull(freeBoardCommentAfter);
 	}
 
+	@Test
+	public void updateReplyCount() {
+		freeBoardCommentService.updateReplyCount(1L, 9999);
+		final FreeBoardCommentDto freeBoardCommentAfter = freeBoardCommentService.get(1L, 1L);
+
+		assertEquals(9999, freeBoardCommentAfter.getCommentReplyCount());
+	}
+
 	private FreeBoardCommentDto findById(long id) {
 		FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(id).orElse(null);
 		if (freeBoardComment == null || freeBoardComment.getIsDeleted()) {

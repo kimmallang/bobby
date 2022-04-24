@@ -3,6 +3,7 @@ package com.mallang.bobby.domain.freeboard.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
+import com.mallang.bobby.domain.freeboard.entity.FreeBoard;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
 import com.mallang.bobby.dto.PagingCursorDto;
@@ -156,6 +158,20 @@ public class FreeBoardCommentService {
 
 		freeBoardComment.setIsDeleted(true);
 
+		freeBoardCommentRepository.save(freeBoardComment);
+	}
+
+	public Integer countCommentCountByFreeBoardId(Long freeBoardId) {
+		return freeBoardCommentRepository.countAllByFreeBoardIdAndIsDeletedFalse(freeBoardId);
+	}
+
+	public void updateReplyCount(Long id, Integer replyCount) {
+		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(id).orElse(null);
+		if (freeBoardComment == null) {
+			log.error("답글 카운트를 업데이트할 게시글을 찾지 못했습니다.");
+			return;
+		}
+		freeBoardComment.setCommentReplyCount(Optional.ofNullable(replyCount).orElse(0));
 		freeBoardCommentRepository.save(freeBoardComment);
 	}
 }

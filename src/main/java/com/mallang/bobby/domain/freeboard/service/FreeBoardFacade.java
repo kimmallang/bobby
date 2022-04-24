@@ -49,7 +49,10 @@ public class FreeBoardFacade {
 	}
 
 	public Long saveComment(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
-		return freeBoardCommentService.save(freeBoardCommentDto, userDto);
+		final Long commentId = freeBoardCommentService.save(freeBoardCommentDto, userDto);
+		final Integer commentCount = freeBoardCommentService.countCommentCountByFreeBoardId(freeBoardCommentDto.getFreeBoardId());
+		freeBoardService.updateCommentCount(freeBoardCommentDto.getFreeBoardId(), commentCount);
+		return commentId;
 	}
 
 	public void removeComment(long id, UserDto userDto) {
@@ -61,7 +64,10 @@ public class FreeBoardFacade {
 	}
 
 	public Long saveReply(FreeBoardReplyDto freeBoardReplyDto, UserDto userDto) {
-		return freeBoardReplyService.save(freeBoardReplyDto, userDto);
+		final Long replyId = freeBoardReplyService.save(freeBoardReplyDto, userDto);
+		final Integer replyCount = freeBoardReplyService.countReplyCountByFreeBoardCommentId(freeBoardReplyDto.getFreeBoardCommentId());
+		freeBoardCommentService.updateReplyCount(freeBoardReplyDto.getFreeBoardCommentId(), replyCount);
+		return replyId;
 	}
 
 	public void removeReply(long id, UserDto userDto) {

@@ -134,4 +134,8 @@ public class FreeBoardReplyService {
 
 		freeBoardReplyRepository.save(freeBoardReply);
 	}
+
+	public Integer countReplyCountByFreeBoardCommentId(Long freeBoardCommentId) {
+		return freeBoardReplyRepository.countAllByFreeBoardCommentIdAndIsDeletedFalse(freeBoardCommentId);
+	}
 }

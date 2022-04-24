@@ -3,6 +3,7 @@ package com.mallang.bobby.domain.freeboard.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -172,5 +173,15 @@ public class FreeBoardService {
 
 		freeBoardRepository.save(freeBoard);
 		freeBoardLikeService.unLike(freeBoardId, userDto.getId());
+	}
+
+	public void updateCommentCount(Long id, Integer commentCount) {
+		final FreeBoard freeBoard = freeBoardRepository.findById(id).orElse(null);
+		if (freeBoard == null) {
+			log.error("댓글 카운트를 업데이트할 게시글을 찾지 못했습니다.");
+			return;
+		}
+		freeBoard.setCommentCount(Optional.ofNullable(commentCount).orElse(0));
+		freeBoardRepository.save(freeBoard);
 	}
 }

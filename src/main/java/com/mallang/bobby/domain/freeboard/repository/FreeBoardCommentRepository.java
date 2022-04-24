@@ -12,4 +12,5 @@ import com.mallang.bobby.domain.freeboard.repository.freeBoardCommentRepository.
 public interface FreeBoardCommentRepository extends JpaRepository<FreeBoardComment, Long>, CustomFreeBoardCommentRepository {
 	Page<FreeBoardComment> findAllByFreeBoardId(Long freeBoardId, Pageable pageable);
 	Boolean existsByFreeBoardIdAndIdLessThan(Long freeBoardId, Long id);
+	Integer countAllByFreeBoardIdAndIsDeletedFalse(Long freeBoardId);
 }
