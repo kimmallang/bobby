@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoardCommentReplyDto {
+public class FreeBoardReplyDto {
 	private Long id;
 	private Long freeBoardCommentId;
 	private String contents;

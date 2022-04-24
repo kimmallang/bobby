@@ -18,10 +18,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "free_board_comment_reply")
+@Table(name = "free_board_reply")
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoardCommentReply extends BaseEntity {
+public class FreeBoardReply extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

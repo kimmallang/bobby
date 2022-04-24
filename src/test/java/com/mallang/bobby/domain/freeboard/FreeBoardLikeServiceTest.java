@@ -2,6 +2,10 @@ package com.mallang.bobby.domain.freeboard;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +31,7 @@ public class FreeBoardLikeServiceTest {
 	@Autowired
 	private FreeBoardLikeRepository freeBoardLikeRepository;
 
+	private final List<Long> freeBoardIds = Arrays.asList(1L, 2L, 3L);
 	private final long freeBoardId = 1234L;
 	private final long userId = 1111L;
 
@@ -53,5 +58,15 @@ public class FreeBoardLikeServiceTest {
 
 		freeBoardLikeService.unLike(freeBoardId, userId);
 		assertFalse(freeBoardLikeService.isLike(freeBoardId, userId));
+	}
+
+	@Test
+	public void getLikeFreeBoardIds() {
+		freeBoardLikeService.like(freeBoardIds.get(0), userId);
+		freeBoardLikeService.like(freeBoardIds.get(2), userId);
+
+		List<Long> likeFreeBoardIds = freeBoardLikeService.getLikeFreeBoardIds(freeBoardIds, userId);
+		assertEquals(freeBoardIds.get(0), likeFreeBoardIds.get(0));
+		assertEquals(freeBoardIds.get(2), likeFreeBoardIds.get(1));
 	}
 }

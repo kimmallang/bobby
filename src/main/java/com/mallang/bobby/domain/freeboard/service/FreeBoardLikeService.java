@@ -1,5 +1,8 @@
 package com.mallang.bobby.domain.freeboard.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardLike;
@@ -35,5 +38,11 @@ public class FreeBoardLikeService {
 		}
 
 		freeBoardLikeRepository.deleteById(freeBoardLike.getId());
+	}
+
+	public List<Long> getLikeFreeBoardIds(List<Long> freeBoardIds, long userId) {
+		return freeBoardLikeRepository.findAllByFreeBoardIdInAndUserId(freeBoardIds, userId).stream()
+			.map(FreeBoardLike::getFreeBoardId)
+			.collect(Collectors.toList());
 	}
 }

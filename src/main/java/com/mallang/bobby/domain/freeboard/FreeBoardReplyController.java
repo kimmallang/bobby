@@ -11,36 +11,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
-import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentReplyDto;
-import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentReplyService;
+import com.mallang.bobby.domain.freeboard.dto.FreeBoardReplyDto;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardFacade;
 import com.mallang.bobby.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class FreeBoardCommentReplyController {
-	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
+public class FreeBoardReplyController {
+	private final FreeBoardFacade freeBoardFacade;
 
-	@GetMapping("/free-board-comment-reply/{freeBoardCommentId}")
+	@GetMapping("/free-board-reply/{freeBoardCommentId}")
 	public ResponseDto get(@PathVariable long freeBoardCommentId, long cursor, int size) {
 		return ResponseDto.builder()
-			.data(freeBoardCommentReplyService.get(freeBoardCommentId, cursor, size))
+			.data(freeBoardFacade.getReplies(freeBoardCommentId, cursor, size))
 			.build();
 	}
 
-	@PostMapping("/free-board-comment-reply")
-	public ResponseDto save(@RequestBody FreeBoardCommentReplyDto freeBoardCommentReplyDto, HttpServletRequest request) {
+	@PostMapping("/free-board-reply")
+	public ResponseDto save(@RequestBody FreeBoardReplyDto freeBoardReplyDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardCommentReplyService.save(freeBoardCommentReplyDto, user);
+		freeBoardFacade.saveReply(freeBoardReplyDto, user);
 
 		return ResponseDto.builder().build();
 	}
 
-	@DeleteMapping("/free-board-comment-reply/{id}")
+	@DeleteMapping("/free-board-reply/{id}")
 	public ResponseDto delete(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardCommentReplyService.remove(id, user);
+		freeBoardFacade.removeReply(id, user);
 
 		return ResponseDto.builder().build();
 	}

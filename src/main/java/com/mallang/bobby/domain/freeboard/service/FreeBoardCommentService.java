@@ -6,10 +6,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -18,7 +14,6 @@ import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
 import com.mallang.bobby.dto.PagingCursorDto;
-import com.mallang.bobby.dto.PagingDto;
 import com.mallang.bobby.exception.NotLoginException;
 import com.mallang.bobby.exception.PermissionDeniedException;
 import com.mallang.bobby.exception.UnExpectedException;
@@ -31,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeBoardCommentService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardCommentRepository freeBoardCommentRepository;
-	private final FreeBoardCommentReplyService freeBoardCommentReplyService;
+	private final FreeBoardReplyService freeBoardReplyService;
 
 	private static final int replyCursor = 0;
 	private static final int replySize = 20;
@@ -71,7 +66,8 @@ public class FreeBoardCommentService {
 		}
 
 		final FreeBoardCommentDto freeBoardCommentDto = modelMapper.map(freeBoardComment, FreeBoardCommentDto.class);
-		freeBoardCommentDto.setCommentReplyPage(freeBoardCommentReplyService.get(freeBoardCommentDto.getId(), replyCursor, replySize));
+		freeBoardCommentDto.setCommentReplyPage(
+			freeBoardReplyService.get(freeBoardCommentDto.getId(), replyCursor, replySize));
 
 		return freeBoardCommentDto;
 	}

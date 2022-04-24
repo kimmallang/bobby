@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
-import com.mallang.bobby.domain.freeboard.service.FreeBoardService;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardFacade;
 import com.mallang.bobby.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class FreeBoardController {
-	private final FreeBoardService freeBoardService;
+	private final FreeBoardFacade freeBoardFacade;
 
 	@GetMapping("/free-board")
 	public ResponseDto get(long cursor, int size) {
 		return ResponseDto.builder()
-			.data(freeBoardService.get(cursor, size))
+			.data(freeBoardFacade.getBoards(cursor, size))
 			.build();
 	}
 
@@ -33,14 +33,14 @@ public class FreeBoardController {
 	public ResponseDto get(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardService.get(id, user))
+			.data(freeBoardFacade.getBoard(id, user))
 			.build();
 	}
 
 	@PostMapping("/free-board")
 	public ResponseDto save(@RequestBody FreeBoardDto freeBoardDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardService.save(freeBoardDto, user);
+		freeBoardFacade.saveBoard(freeBoardDto, user);
 
 		return ResponseDto.builder().build();
 	}
@@ -48,7 +48,7 @@ public class FreeBoardController {
 	@DeleteMapping("/free-board/{id}")
 	public ResponseDto delete(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardService.remove(id, user);
+		freeBoardFacade.removeBoard(id, user);
 
 		return ResponseDto.builder().build();
 	}
@@ -56,7 +56,7 @@ public class FreeBoardController {
 	@PostMapping("/free-board/like/{id}")
 	public ResponseDto like(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardService.like(id, user);
+		freeBoardFacade.likeBoard(id, user);
 
 		return ResponseDto.builder().build();
 	}
@@ -64,7 +64,7 @@ public class FreeBoardController {
 	@DeleteMapping("/free-board/like/{id}")
 	public ResponseDto unLike(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardService.unLike(id, user);
+		freeBoardFacade.unLikeBoard(id, user);
 
 		return ResponseDto.builder().build();
 	}
