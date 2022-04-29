@@ -63,6 +63,14 @@ public class FreeBoardFacade {
 		return freeBoardReplyService.get(freeBoardCommentId, cursor, size);
 	}
 
+	public void likeComment(long freeBoardCommentId, UserDto userDto) {
+		freeBoardCommentService.like(freeBoardCommentId, userDto);
+	}
+
+	public void unLikeComment(long freeBoardCommentId, UserDto userDto) {
+		freeBoardCommentService.unLike(freeBoardCommentId, userDto);
+	}
+
 	public Long saveReply(FreeBoardReplyDto freeBoardReplyDto, UserDto userDto) {
 		final Long replyId = freeBoardReplyService.save(freeBoardReplyDto, userDto);
 		final Integer replyCount = freeBoardReplyService.countReplyCountByFreeBoardCommentId(freeBoardReplyDto.getFreeBoardCommentId());
@@ -72,5 +80,13 @@ public class FreeBoardFacade {
 
 	public void removeReply(long id, UserDto userDto) {
 		freeBoardReplyService.remove(id, userDto);
+	}
+
+	public void likeReply(long freeBoardReplyId, UserDto userDto) {
+		freeBoardReplyService.like(freeBoardReplyId, userDto);
+	}
+
+	public void unLikeReply(long freeBoardReplyId, UserDto userDto) {
+		freeBoardReplyService.unLike(freeBoardReplyId, userDto);
 	}
 }

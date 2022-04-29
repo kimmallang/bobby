@@ -10,6 +10,7 @@ import com.mallang.bobby.domain.freeboard.entity.FreeBoardLike;
 
 @Repository
 public interface FreeBoardLikeRepository extends JpaRepository<FreeBoardLike, Long> {
-	Optional<FreeBoardLike> findByFreeBoardIdAndUserId(Long freeBoard, Long userId);
-	List<FreeBoardLike> findAllByFreeBoardIdInAndUserId(List<Long> freeBoard, Long userId);
+	Boolean existsByFreeBoardIdAndUserId(Long freeBoardId, Long userId);
+	Optional<FreeBoardLike> findByFreeBoardIdAndUserId(Long freeBoardId, Long userId);
+	List<FreeBoardLike> findAllByFreeBoardIdInAndUserId(List<Long> freeBoardIds, Long userId);
 }

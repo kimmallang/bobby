@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardReplyDto;
+import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardReply;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardReplyRepository;
 import com.mallang.bobby.dto.PagingCursorDto;
@@ -26,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeBoardReplyService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardReplyRepository freeBoardReplyRepository;
+	private final FreeBoardReplyLikeService freeBoardReplyLikeService;
 
 	public PagingCursorDto<FreeBoardReplyDto> get(long freeBoardCommentId, long cursor, int size) {
 		final List<FreeBoardReply> freeBoardReplyList = freeBoardReplyRepository.findAllByFreeBoardCommentIdOrderByIdDesc(freeBoardCommentId, cursor, size);
@@ -78,7 +80,7 @@ public class FreeBoardReplyService {
 
 			return update(freeBoardReplyDto, userDto);
 		} catch (Exception e) {
-			log.error("FreeBoardCommentReplyService.save(): {}", e.getMessage());
+			log.error("FreeBoardReplyService.save(): {}", e.getMessage());
 			throw e;
 		}
 	}
@@ -133,6 +135,40 @@ public class FreeBoardReplyService {
 		freeBoardReply.setIsDeleted(true);
 
 		freeBoardReplyRepository.save(freeBoardReply);
+	}
+
+	private boolean isLike(long freeBoardId, UserDto userDto) {
+		if (userDto == null) {
+			return false;
+		}
+
+		return freeBoardReplyLikeService.isLike(freeBoardId, userDto.getId());
+	}
+
+	public void like(long freeBoardId, UserDto userDto) {
+		final FreeBoardReply freeBoardReply = freeBoardReplyRepository.findById(freeBoardId).orElse(null);
+		if (freeBoardReply == null || userDto == null) {
+			return;
+		}
+
+		freeBoardReply.setLikeCount(freeBoardReply.getLikeCount() + 1);
+
+		freeBoardReplyRepository.save(freeBoardReply);
+		freeBoardReplyLikeService.like(freeBoardId, userDto.getId());
+	}
+
+	public void unLike(long freeBoardId, UserDto userDto) {
+		final FreeBoardReply freeBoardReply = freeBoardReplyRepository.findById(freeBoardId).orElse(null);
+		if (freeBoardReply == null || userDto == null) {
+			return;
+		}
+
+		if (freeBoardReply.getLikeCount() > 0) {
+			freeBoardReply.setLikeCount(freeBoardReply.getLikeCount() - 1);
+		}
+
+		freeBoardReplyRepository.save(freeBoardReply);
+		freeBoardReplyLikeService.unLike(freeBoardId, userDto.getId());
 	}
 
 	public Integer countReplyCountByFreeBoardCommentId(Long freeBoardCommentId) {

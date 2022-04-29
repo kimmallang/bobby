@@ -51,4 +51,20 @@ public class FreeBoardCommentController {
 
 		return ResponseDto.builder().build();
 	}
+
+	@PostMapping("/free-board-comment/like/{id}")
+	public ResponseDto like(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardFacade.likeComment(id, user);
+
+		return ResponseDto.builder().build();
+	}
+
+	@DeleteMapping("/free-board-comment/like/{id}")
+	public ResponseDto unLike(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardFacade.unLikeComment(id, user);
+
+		return ResponseDto.builder().build();
+	}
 }

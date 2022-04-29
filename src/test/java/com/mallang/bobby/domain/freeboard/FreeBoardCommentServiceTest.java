@@ -20,8 +20,12 @@ import com.mallang.bobby.config.TestConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
+import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentLikeRepository;
+import com.mallang.bobby.domain.freeboard.repository.FreeBoardReplyLikeRepository;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardReplyRepository;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentRepository;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentLikeService;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardReplyLikeService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardReplyService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentService;
 import com.mallang.bobby.dto.PagingCursorDto;
@@ -39,15 +43,21 @@ public class FreeBoardCommentServiceTest {
 	private FreeBoardCommentRepository freeBoardCommentRepository;
 
 	@Autowired
+	private FreeBoardCommentLikeRepository freeBoardCommentLikeRepository;
+
+	@Autowired
 	private FreeBoardReplyRepository freeBoardReplyRepository;
+
+	@Autowired
+	private FreeBoardReplyLikeRepository freeBoardReplyLikeRepository;
 
 	@BeforeEach
 	public void init() {
 		modelMapper = new ModelMapper();
-		FreeBoardReplyService freeBoardReplyService = new FreeBoardReplyService(modelMapper,
-			freeBoardReplyRepository);
-		freeBoardCommentService = new FreeBoardCommentService(modelMapper, freeBoardCommentRepository,
-			freeBoardReplyService);
+		final FreeBoardReplyLikeService freeBoardReplyLikeService = new FreeBoardReplyLikeService(freeBoardReplyLikeRepository);
+		final FreeBoardReplyService freeBoardReplyService = new FreeBoardReplyService(modelMapper, freeBoardReplyRepository, freeBoardReplyLikeService);
+		final FreeBoardCommentLikeService freeBoardCommentLikeService = new FreeBoardCommentLikeService(freeBoardCommentLikeRepository);
+		freeBoardCommentService = new FreeBoardCommentService(modelMapper, freeBoardCommentRepository, freeBoardReplyService, freeBoardCommentLikeService);
 	}
 
 	@Test
@@ -56,7 +66,7 @@ public class FreeBoardCommentServiceTest {
 		assertTrue(freeBoardCommentPage.getItems().size() > 0);
 		assertFalse(freeBoardCommentPage.getIsLast());
 
-		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage2 = freeBoardCommentService.get(1L, freeBoardCommentPage.getCursor(), 20);
+		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage2 = freeBoardCommentService.get(1L, freeBoardCommentPage.getCursor(), 200);
 		assertTrue(freeBoardCommentPage2.getItems().size() > 0);
 		assertTrue(freeBoardCommentPage2.getIsLast());
 	}

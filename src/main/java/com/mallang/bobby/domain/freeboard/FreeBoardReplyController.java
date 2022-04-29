@@ -44,4 +44,20 @@ public class FreeBoardReplyController {
 
 		return ResponseDto.builder().build();
 	}
+
+	@PostMapping("/free-board-reply/like/{id}")
+	public ResponseDto like(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardFacade.likeReply(id, user);
+
+		return ResponseDto.builder().build();
+	}
+
+	@DeleteMapping("/free-board-reply/like/{id}")
+	public ResponseDto unLike(@PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
+		freeBoardFacade.unLikeReply(id, user);
+
+		return ResponseDto.builder().build();
+	}
 }

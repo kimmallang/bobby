@@ -17,9 +17,7 @@ public class FreeBoardLikeService {
 	private final FreeBoardLikeRepository freeBoardLikeRepository;
 
 	public boolean isLike(long freeBoardId, long userId) {
-		final FreeBoardLike freeBoardLike = freeBoardLikeRepository.findByFreeBoardIdAndUserId(freeBoardId, userId).orElse(null);
-
-		return freeBoardLike != null;
+		return freeBoardLikeRepository.existsByFreeBoardIdAndUserId(freeBoardId, userId);
 	}
 
 	public void like(long freeBoardId, long userId) {

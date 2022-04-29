@@ -17,7 +17,9 @@ import com.mallang.bobby.config.TestConfig;
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardReplyDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardReply;
+import com.mallang.bobby.domain.freeboard.repository.FreeBoardReplyLikeRepository;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardReplyRepository;
+import com.mallang.bobby.domain.freeboard.service.FreeBoardReplyLikeService;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardReplyService;
 
 @Import(TestConfig.class)
@@ -32,10 +34,14 @@ public class FreeBoardReplyServiceTest {
 	@Autowired
 	private FreeBoardReplyRepository freeBoardReplyRepository;
 
+	@Autowired
+	private FreeBoardReplyLikeRepository freeBoardReplyLikeRepository;
+
 	@BeforeEach
 	public void init() {
 		modelMapper = new ModelMapper();
-		freeBoardReplyService = new FreeBoardReplyService(modelMapper, freeBoardReplyRepository);
+		final FreeBoardReplyLikeService freeBoardReplyLikeService = new FreeBoardReplyLikeService(freeBoardReplyLikeRepository);
+		freeBoardReplyService = new FreeBoardReplyService(modelMapper, freeBoardReplyRepository, freeBoardReplyLikeService);
 	}
 
 	@Test

@@ -29,6 +29,7 @@ public class FreeBoardCommentService {
 	private final ModelMapper modelMapper;
 	private final FreeBoardCommentRepository freeBoardCommentRepository;
 	private final FreeBoardReplyService freeBoardReplyService;
+	private final FreeBoardCommentLikeService freeBoardCommentLikeService;
 
 	private static final int replyCursor = 0;
 	private static final int replySize = 20;
@@ -163,6 +164,40 @@ public class FreeBoardCommentService {
 
 	public Integer countCommentCountByFreeBoardId(Long freeBoardId) {
 		return freeBoardCommentRepository.countAllByFreeBoardIdAndIsDeletedFalse(freeBoardId);
+	}
+
+	private boolean isLike(long freeBoardId, UserDto userDto) {
+		if (userDto == null) {
+			return false;
+		}
+
+		return freeBoardCommentLikeService.isLike(freeBoardId, userDto.getId());
+	}
+
+	public void like(long freeBoardId, UserDto userDto) {
+		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(freeBoardId).orElse(null);
+		if (freeBoardComment == null || userDto == null) {
+			return;
+		}
+
+		freeBoardComment.setLikeCount(freeBoardComment.getLikeCount() + 1);
+
+		freeBoardCommentRepository.save(freeBoardComment);
+		freeBoardCommentLikeService.like(freeBoardId, userDto.getId());
+	}
+
+	public void unLike(long freeBoardId, UserDto userDto) {
+		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(freeBoardId).orElse(null);
+		if (freeBoardComment == null || userDto == null) {
+			return;
+		}
+
+		if (freeBoardComment.getLikeCount() > 0) {
+			freeBoardComment.setLikeCount(freeBoardComment.getLikeCount() - 1);
+		}
+
+		freeBoardCommentRepository.save(freeBoardComment);
+		freeBoardCommentLikeService.unLike(freeBoardId, userDto.getId());
 	}
 
 	public void updateReplyCount(Long id, Integer replyCount) {
