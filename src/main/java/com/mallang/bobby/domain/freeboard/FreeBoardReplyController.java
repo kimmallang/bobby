@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
-import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
+import com.mallang.bobby.domain.freeboard.dto.FreeBoardReplyDto;
 import com.mallang.bobby.domain.freeboard.service.FreeBoardFacade;
 import com.mallang.bobby.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,53 +19,45 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class FreeBoardController {
+public class FreeBoardReplyController {
 	private final FreeBoardFacade freeBoardFacade;
 
-	@GetMapping("/free-board")
-	public ResponseDto get(long cursor, int size, HttpServletRequest request) {
+	@GetMapping("/free-board-reply/{freeBoardCommentId}")
+	public ResponseDto get(@PathVariable long freeBoardCommentId, long cursor, int size, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardFacade.getBoards(cursor, size, user))
+			.data(freeBoardFacade.getReplies(freeBoardCommentId, cursor, size, user))
 			.build();
 	}
 
-	@GetMapping("/free-board/{id}")
-	public ResponseDto get(@PathVariable long id, HttpServletRequest request) {
+	@PostMapping("/free-board-reply")
+	public ResponseDto save(@RequestBody FreeBoardReplyDto freeBoardReplyDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		return ResponseDto.builder()
-			.data(freeBoardFacade.getBoard(id, user))
-			.build();
-	}
-
-	@PostMapping("/free-board")
-	public ResponseDto save(@RequestBody FreeBoardDto freeBoardDto, HttpServletRequest request) {
-		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardFacade.saveBoard(freeBoardDto, user);
+		freeBoardFacade.saveReply(freeBoardReplyDto, user);
 
 		return ResponseDto.builder().build();
 	}
 
-	@DeleteMapping("/free-board/{id}")
+	@DeleteMapping("/free-board-reply/{id}")
 	public ResponseDto delete(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardFacade.removeBoard(id, user);
+		freeBoardFacade.removeReply(id, user);
 
 		return ResponseDto.builder().build();
 	}
 
-	@PostMapping("/free-board/like/{id}")
+	@PostMapping("/free-board-reply/like/{id}")
 	public ResponseDto like(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardFacade.likeBoard(id, user);
+		freeBoardFacade.likeReply(id, user);
 
 		return ResponseDto.builder().build();
 	}
 
-	@DeleteMapping("/free-board/like/{id}")
+	@DeleteMapping("/free-board-reply/like/{id}")
 	public ResponseDto unLike(@PathVariable long id, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardFacade.unLikeBoard(id, user);
+		freeBoardFacade.unLikeReply(id, user);
 
 		return ResponseDto.builder().build();
 	}

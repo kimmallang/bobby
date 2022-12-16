@@ -21,7 +21,7 @@ public class UserTokenServiceTest {
 
 		userDto = UserDto.builder()
 			.id(1L)
-			.userId(2L)
+			.userId("asd")
 			.nickname("nickname")
 			.authorizedBy(OAuth2Provider.kakao)
 			.profileImageUrl("profileImageUrl")

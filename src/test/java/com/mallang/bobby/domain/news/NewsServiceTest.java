@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.mallang.bobby.config.TestConfig;
 import com.mallang.bobby.domain.news.repository.NewsRepository;
 import com.mallang.bobby.domain.news.service.NewsApiService;
 import com.mallang.bobby.domain.news.service.NewsService;
@@ -23,6 +25,7 @@ import com.mallang.bobby.domain.news.dto.NewsRequestQuery;
 import com.mallang.bobby.domain.news.dto.NewsDto;
 import com.mallang.bobby.external.naver.NaverApi;
 
+@Import(TestConfig.class)
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)

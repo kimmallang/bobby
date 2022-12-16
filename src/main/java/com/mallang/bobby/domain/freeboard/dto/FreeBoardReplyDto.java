@@ -12,14 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoardDto {
+public class FreeBoardReplyDto {
 	private Long id;
-	private String title;
+	private Long freeBoardCommentId;
 	private String contents;
 	private Long writerId;
 	private String writerNickname;
 	private Integer likeCount;
-	private Integer commentCount;
 	private Boolean isDeleted;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")

@@ -1,6 +1,7 @@
 package com.mallang.bobby.config;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import org.modelmapper.ModelMapper;
@@ -36,7 +37,7 @@ public class BaseConfig {
 			.requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
 			.setConnectTimeout(Duration.ofSeconds(10))
 			.setReadTimeout(Duration.ofSeconds(10))
-			.additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
+			.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8))
 			.build();
 	}
 

@@ -18,17 +18,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "free_board")
+@Table(name = "free_board_comment")
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoard extends BaseEntity {
+public class FreeBoardComment extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "title")
-	private String title;
+	@Column(name = "free_board_id")
+	private Long freeBoardId;
 
 	@Column(name = "contents")
 	private String contents;
@@ -42,8 +42,8 @@ public class FreeBoard extends BaseEntity {
 	@Column(name = "like_count")
 	private Integer likeCount;
 
-	@Column(name = "comment_count")
-	private Integer commentCount;
+	@Column(name = "comment_reply_count")
+	private Integer commentReplyCount;
 
 	@Column(name = "delete_yn")
 	private Boolean isDeleted;
