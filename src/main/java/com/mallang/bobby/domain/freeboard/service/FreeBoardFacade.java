@@ -16,8 +16,8 @@ public class FreeBoardFacade {
 	private final FreeBoardCommentService freeBoardCommentService;
 	private final FreeBoardReplyService freeBoardReplyService;
 
-	public PagingCursorDto<FreeBoardDto> getBoards(long cursor, int size) {
-		return freeBoardService.get(cursor, size);
+	public PagingCursorDto<FreeBoardDto> getBoards(long cursor, int size, UserDto userDto) {
+		return freeBoardService.get(cursor, size, userDto);
 	}
 
 	public FreeBoardDto getBoard(long id, UserDto userDto) {
@@ -40,12 +40,12 @@ public class FreeBoardFacade {
 		freeBoardService.unLike(freeBoardId, userDto);
 	}
 
-	public PagingCursorDto<FreeBoardCommentDto> getComments(long freeBoardId, long cursor, int size) {
-		return freeBoardCommentService.get(freeBoardId, cursor, size);
+	public PagingCursorDto<FreeBoardCommentDto> getComments(long freeBoardId, long cursor, int size, UserDto userDto) {
+		return freeBoardCommentService.get(freeBoardId, cursor, size, userDto);
 	}
 
-	public FreeBoardCommentDto getComment(long freeBoardId, long id) {
-		return freeBoardCommentService.get(freeBoardId, id);
+	public FreeBoardCommentDto getComment(long freeBoardId, long id, UserDto userDto) {
+		return freeBoardCommentService.get(freeBoardId, id, userDto);
 	}
 
 	public Long saveComment(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
@@ -59,8 +59,8 @@ public class FreeBoardFacade {
 		freeBoardCommentService.remove(id, userDto);
 	}
 
-	public PagingCursorDto<FreeBoardReplyDto> getReplies(long freeBoardCommentId, long cursor, int size) {
-		return freeBoardReplyService.get(freeBoardCommentId, cursor, size);
+	public PagingCursorDto<FreeBoardReplyDto> getReplies(long freeBoardCommentId, long cursor, int size, UserDto userDto) {
+		return freeBoardReplyService.get(freeBoardCommentId, cursor, size, userDto);
 	}
 
 	public void likeComment(long freeBoardCommentId, UserDto userDto) {

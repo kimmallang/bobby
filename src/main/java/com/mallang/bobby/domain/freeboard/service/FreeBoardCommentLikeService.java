@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardCommentLike;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardCommentLikeRepository;
 import lombok.RequiredArgsConstructor;

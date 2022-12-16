@@ -62,11 +62,11 @@ public class FreeBoardCommentServiceTest {
 
 	@Test
 	public void getList() {
-		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage = freeBoardCommentService.get(1L, 0, 3);
+		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage = freeBoardCommentService.get(1L, 0, 3, null);
 		assertTrue(freeBoardCommentPage.getItems().size() > 0);
 		assertFalse(freeBoardCommentPage.getIsLast());
 
-		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage2 = freeBoardCommentService.get(1L, freeBoardCommentPage.getCursor(), 200);
+		PagingCursorDto<FreeBoardCommentDto> freeBoardCommentPage2 = freeBoardCommentService.get(1L, freeBoardCommentPage.getCursor(), 200, null);
 		assertTrue(freeBoardCommentPage2.getItems().size() > 0);
 		assertTrue(freeBoardCommentPage2.getIsLast());
 	}
@@ -133,7 +133,7 @@ public class FreeBoardCommentServiceTest {
 	@Test
 	public void updateReplyCount() {
 		freeBoardCommentService.updateReplyCount(1L, 9999);
-		final FreeBoardCommentDto freeBoardCommentAfter = freeBoardCommentService.get(1L, 1L);
+		final FreeBoardCommentDto freeBoardCommentAfter = freeBoardCommentService.get(1L, 1L, null);
 
 		assertEquals(9999, freeBoardCommentAfter.getCommentReplyCount());
 	}

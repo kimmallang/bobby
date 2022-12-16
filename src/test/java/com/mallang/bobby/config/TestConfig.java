@@ -3,6 +3,7 @@ package com.mallang.bobby.config;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -17,5 +18,10 @@ public class TestConfig {
 	@Bean
 	public JPAQueryFactory jpaQueryFactory() {
 		return new JPAQueryFactory(entityManager);
+	}
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 }

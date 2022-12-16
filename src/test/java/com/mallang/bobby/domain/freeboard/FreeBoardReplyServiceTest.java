@@ -26,7 +26,7 @@ import com.mallang.bobby.domain.freeboard.service.FreeBoardReplyService;
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class FreeBoardReplyServiceTest {
 	private ModelMapper modelMapper;
 	private FreeBoardReplyService freeBoardReplyService;
@@ -40,13 +40,15 @@ public class FreeBoardReplyServiceTest {
 	@BeforeEach
 	public void init() {
 		modelMapper = new ModelMapper();
-		final FreeBoardReplyLikeService freeBoardReplyLikeService = new FreeBoardReplyLikeService(freeBoardReplyLikeRepository);
-		freeBoardReplyService = new FreeBoardReplyService(modelMapper, freeBoardReplyRepository, freeBoardReplyLikeService);
+		final FreeBoardReplyLikeService freeBoardReplyLikeService = new FreeBoardReplyLikeService(
+			freeBoardReplyLikeRepository);
+		freeBoardReplyService = new FreeBoardReplyService(modelMapper, freeBoardReplyRepository,
+			freeBoardReplyLikeService);
 	}
 
 	@Test
 	public void getList() {
-		assertTrue(freeBoardReplyService.get(1L, 0, 1).getItems().size() > 0);
+		assertTrue(freeBoardReplyService.get(1L, 0, 1, null).getItems().size() > 0);
 	}
 
 	@Test
@@ -62,7 +64,7 @@ public class FreeBoardReplyServiceTest {
 			.build();
 
 		freeBoardReplyService.save(freeBoardReplyDto, userDto);
-		final FreeBoardReplyDto savedFreeBoardReplyDto = freeBoardReplyService.get(1L, 0, 20).getItems().get(0);
+		final FreeBoardReplyDto savedFreeBoardReplyDto = freeBoardReplyService.get(1L, 0, 20, null).getItems().get(0);
 
 		assertEquals("contents", savedFreeBoardReplyDto.getContents());
 	}

@@ -11,7 +11,6 @@ import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardReplyDto;
-import com.mallang.bobby.domain.freeboard.entity.FreeBoardComment;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoardReply;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardReplyRepository;
 import com.mallang.bobby.dto.PagingCursorDto;
@@ -29,8 +28,9 @@ public class FreeBoardReplyService {
 	private final FreeBoardReplyRepository freeBoardReplyRepository;
 	private final FreeBoardReplyLikeService freeBoardReplyLikeService;
 
-	public PagingCursorDto<FreeBoardReplyDto> get(long freeBoardCommentId, long cursor, int size) {
-		final List<FreeBoardReply> freeBoardReplyList = freeBoardReplyRepository.findAllByFreeBoardCommentIdOrderByIdDesc(freeBoardCommentId, cursor, size);
+	public PagingCursorDto<FreeBoardReplyDto> get(long freeBoardCommentId, long cursor, int size, UserDto userDto) {
+		final List<FreeBoardReply> freeBoardReplyList = freeBoardReplyRepository.findAllByFreeBoardCommentIdOrderByIdDesc(
+			freeBoardCommentId, cursor, size);
 		if (CollectionUtils.isEmpty(freeBoardReplyList)) {
 			return PagingCursorDto.<FreeBoardReplyDto>builder()
 				.cursor(null)
@@ -39,20 +39,30 @@ public class FreeBoardReplyService {
 				.build();
 		}
 
-		final long nextCursor = freeBoardReplyList.get(freeBoardReplyList.size()-1).getId();
-		final boolean existNextPage = freeBoardReplyRepository.existsByFreeBoardCommentIdAndIdLessThan(freeBoardCommentId, nextCursor);
+		final long nextCursor = freeBoardReplyList.get(freeBoardReplyList.size() - 1).getId();
+		final boolean existNextPage = freeBoardReplyRepository.existsByFreeBoardCommentIdAndIdLessThan(
+			freeBoardCommentId, nextCursor);
+
+		final List<FreeBoardReplyDto> freeBoardReplyDtoList = freeBoardReplyList.stream()
+			.map(this::mapToDto)
+			.collect(Collectors.toList());
+
+		populateIsMine(freeBoardReplyDtoList, userDto);
+		populateIsLike(freeBoardReplyDtoList, userDto);
 
 		return PagingCursorDto.<FreeBoardReplyDto>builder()
 			.cursor(nextCursor)
 			.isLast(!existNextPage)
-			.items(freeBoardReplyList.stream()
-				.map(this::mapToDto)
-				.collect(Collectors.toList()))
+			.items(freeBoardReplyDtoList)
 			.build();
 	}
 
 	private FreeBoardReplyDto mapToDto(FreeBoardReply freeBoardReply) {
 		final FreeBoardReplyDto freeBoardReplyDto = modelMapper.map(freeBoardReply, FreeBoardReplyDto.class);
+
+		freeBoardReplyDto.setIsMine(false);
+		freeBoardReplyDto.setIsLike(false);
+
 		if (freeBoardReplyDto.getIsDeleted()) {
 			return FreeBoardReplyDto.builder()
 				.id(freeBoardReplyDto.getId())
@@ -63,9 +73,37 @@ public class FreeBoardReplyService {
 				.isDeleted(true)
 				.createdAt(null)
 				.modifiedAt(null)
+				.isMine(false)
+				.isLike(false)
 				.build();
 		}
 		return freeBoardReplyDto;
+	}
+
+	private void populateIsMine(List<FreeBoardReplyDto> freeBoardReplyDtoList, UserDto userDto) {
+		if (userDto == null) {
+			return;
+		}
+
+		final Long userId = userDto.getId();
+
+		freeBoardReplyDtoList.forEach(
+			freeBoardCommentDto -> freeBoardCommentDto.setIsMine(freeBoardCommentDto.getWriterId().equals(userId)));
+	}
+
+	private void populateIsLike(List<FreeBoardReplyDto> freeBoardReplyDtoList, UserDto userDto) {
+		if (userDto == null) {
+			return;
+		}
+
+		final List<Long> idList = freeBoardReplyDtoList.stream()
+			.map(FreeBoardReplyDto::getId)
+			.collect(Collectors.toList());
+
+		final List<Long> likeIdList = freeBoardReplyLikeService.getLikeFreeBoardReplyIds(idList, userDto.getId());
+
+		freeBoardReplyDtoList.forEach(
+			freeBoardCommentDto -> freeBoardCommentDto.setIsLike(likeIdList.contains(freeBoardCommentDto.getId())));
 	}
 
 	public Long save(FreeBoardReplyDto freeBoardReplyDto, UserDto userDto) {
@@ -135,14 +173,6 @@ public class FreeBoardReplyService {
 		freeBoardReply.setIsDeleted(true);
 
 		freeBoardReplyRepository.save(freeBoardReply);
-	}
-
-	private boolean isLike(long freeBoardId, UserDto userDto) {
-		if (userDto == null) {
-			return false;
-		}
-
-		return freeBoardReplyLikeService.isLike(freeBoardId, userDto.getId());
 	}
 
 	public void like(long freeBoardId, UserDto userDto) {

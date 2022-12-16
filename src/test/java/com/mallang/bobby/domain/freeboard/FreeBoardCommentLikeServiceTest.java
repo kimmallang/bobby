@@ -2,6 +2,9 @@ package com.mallang.bobby.domain.freeboard;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,15 +23,17 @@ import com.mallang.bobby.domain.freeboard.service.FreeBoardCommentLikeService;
 @DataJpaTest
 @Transactional
 @ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class FreeBoardCommentLikeServiceTest {
 	private FreeBoardCommentLikeService freeBoardCommentLikeService;
 
 	@Autowired
 	private FreeBoardCommentLikeRepository freeBoardCommentLikeRepository;
 
-	private final long freeBoardCommentId = 1234L;
-	private final long userId = 1111L;
+	private final long FREE_BOARD_COMMENT_ID = 1234L;
+	private final long FREE_BOARD_COMMENT_ID_2 = 2468L;
+	private final long FREE_BOARD_COMMENT_ID_3 = 1357L;
+	private final long USER_ID = 1111L;
 
 	@BeforeEach
 	public void init() {
@@ -37,21 +42,33 @@ public class FreeBoardCommentLikeServiceTest {
 
 	@Test
 	public void isLike() {
-		assertFalse(freeBoardCommentLikeService.isLike(freeBoardCommentId, userId));
+		assertFalse(freeBoardCommentLikeService.isLike(FREE_BOARD_COMMENT_ID, USER_ID));
 	}
 
 	@Test
 	public void like() {
-		freeBoardCommentLikeService.like(freeBoardCommentId, userId);
-		assertTrue(freeBoardCommentLikeService.isLike(freeBoardCommentId, userId));
+		freeBoardCommentLikeService.like(FREE_BOARD_COMMENT_ID, USER_ID);
+		assertTrue(freeBoardCommentLikeService.isLike(FREE_BOARD_COMMENT_ID, USER_ID));
 	}
 
 	@Test
 	public void unLike() {
-		freeBoardCommentLikeService.like(freeBoardCommentId, userId);
-		assertTrue(freeBoardCommentLikeService.isLike(freeBoardCommentId, userId));
+		freeBoardCommentLikeService.like(FREE_BOARD_COMMENT_ID, USER_ID);
+		assertTrue(freeBoardCommentLikeService.isLike(FREE_BOARD_COMMENT_ID, USER_ID));
 
-		freeBoardCommentLikeService.unLike(freeBoardCommentId, userId);
-		assertFalse(freeBoardCommentLikeService.isLike(freeBoardCommentId, userId));
+		freeBoardCommentLikeService.unLike(FREE_BOARD_COMMENT_ID, USER_ID);
+		assertFalse(freeBoardCommentLikeService.isLike(FREE_BOARD_COMMENT_ID, USER_ID));
+	}
+
+	@Test
+	public void getLikeFreeBoardCommentIds() {
+		freeBoardCommentLikeService.like(FREE_BOARD_COMMENT_ID, USER_ID);
+		freeBoardCommentLikeService.like(FREE_BOARD_COMMENT_ID_2, USER_ID);
+
+		List<Long> likeFreeBoardIds = freeBoardCommentLikeService.getLikeFreeBoardCommentIds(
+			Arrays.asList(FREE_BOARD_COMMENT_ID, FREE_BOARD_COMMENT_ID_2, FREE_BOARD_COMMENT_ID_3), USER_ID);
+		assertEquals(2, likeFreeBoardIds.size());
+		assertEquals(FREE_BOARD_COMMENT_ID, likeFreeBoardIds.get(0));
+		assertEquals(FREE_BOARD_COMMENT_ID_2, likeFreeBoardIds.get(1));
 	}
 }

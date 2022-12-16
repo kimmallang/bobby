@@ -30,4 +30,7 @@ public class FreeBoardCommentDto {
 	private LocalDateTime modifiedAt;
 
 	private PagingCursorDto<FreeBoardReplyDto> commentReplyPage;
+
+	private Boolean isMine;
+	private Boolean isLike;
 }

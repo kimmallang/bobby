@@ -23,16 +23,18 @@ public class FreeBoardCommentController {
 	private final FreeBoardFacade freeBoardFacade;
 
 	@GetMapping("/free-board-comment/{freeBoardId}")
-	public ResponseDto get(@PathVariable long freeBoardId, long cursor, int size) {
+	public ResponseDto get(@PathVariable long freeBoardId, long cursor, int size, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardFacade.getComments(freeBoardId, cursor, size))
+			.data(freeBoardFacade.getComments(freeBoardId, cursor, size, user))
 			.build();
 	}
 
 	@GetMapping("/free-board-comment/{freeBoardId}/{id}")
-	public ResponseDto getWithReply(@PathVariable long freeBoardId, @PathVariable long id) {
+	public ResponseDto getWithReply(@PathVariable long freeBoardId, @PathVariable long id, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardFacade.getComment(freeBoardId, id))
+			.data(freeBoardFacade.getComment(freeBoardId, id, user))
 			.build();
 	}
 

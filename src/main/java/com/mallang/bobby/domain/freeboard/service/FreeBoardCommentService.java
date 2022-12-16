@@ -1,6 +1,7 @@
 package com.mallang.bobby.domain.freeboard.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,8 +35,9 @@ public class FreeBoardCommentService {
 	private static final int replyCursor = 0;
 	private static final int replySize = 20;
 
-	public PagingCursorDto<FreeBoardCommentDto> get(long freeBoardId, long cursor, int size) {
-		final List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findAllByFreeBoardIdOrderByIdDesc(freeBoardId, cursor, size);
+	public PagingCursorDto<FreeBoardCommentDto> get(long freeBoardId, long cursor, int size, UserDto userDto) {
+		final List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findAllByFreeBoardIdOrderByIdDesc(
+			freeBoardId, cursor, size);
 		if (CollectionUtils.isEmpty(freeBoardCommentList)) {
 			return PagingCursorDto.<FreeBoardCommentDto>builder()
 				.cursor(null)
@@ -44,19 +46,25 @@ public class FreeBoardCommentService {
 				.build();
 		}
 
-		final long nextCursor = freeBoardCommentList.get(freeBoardCommentList.size()-1).getId();
-		final boolean existNextPage = freeBoardCommentRepository.existsByFreeBoardIdAndIdLessThan(freeBoardId, nextCursor);
+		final long nextCursor = freeBoardCommentList.get(freeBoardCommentList.size() - 1).getId();
+		final boolean existNextPage = freeBoardCommentRepository.existsByFreeBoardIdAndIdLessThan(freeBoardId,
+			nextCursor);
+
+		final List<FreeBoardCommentDto> freeBoardCommentDtoList = freeBoardCommentList.stream()
+			.map(this::mapToDto)
+			.collect(Collectors.toList());
+
+		populateIsMine(freeBoardCommentDtoList, userDto);
+		populateIsLike(freeBoardCommentDtoList, userDto);
 
 		return PagingCursorDto.<FreeBoardCommentDto>builder()
 			.cursor(nextCursor)
 			.isLast(!existNextPage)
-			.items(freeBoardCommentList.stream()
-				.map(this::mapToDto)
-				.collect(Collectors.toList()))
+			.items(freeBoardCommentDtoList)
 			.build();
 	}
 
-	public FreeBoardCommentDto get(long freeBoardId, long id) {
+	public FreeBoardCommentDto get(long freeBoardId, long id, UserDto userDto) {
 		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(id).orElse(null);
 		if (freeBoardComment == null) {
 			return null;
@@ -68,15 +76,23 @@ public class FreeBoardCommentService {
 			return null;
 		}
 
-		final FreeBoardCommentDto freeBoardCommentDto = modelMapper.map(freeBoardComment, FreeBoardCommentDto.class);
+		final FreeBoardCommentDto freeBoardCommentDto = mapToDto(freeBoardComment);
+
 		freeBoardCommentDto.setCommentReplyPage(
-			freeBoardReplyService.get(freeBoardCommentDto.getId(), replyCursor, replySize));
+			freeBoardReplyService.get(freeBoardCommentDto.getId(), replyCursor, replySize, userDto));
+
+		populateIsMine(freeBoardCommentDto, userDto);
+		populateIsLike(freeBoardCommentDto, userDto);
 
 		return freeBoardCommentDto;
 	}
 
 	private FreeBoardCommentDto mapToDto(FreeBoardComment freeBoardComment) {
 		final FreeBoardCommentDto freeBoardCommentDto = modelMapper.map(freeBoardComment, FreeBoardCommentDto.class);
+
+		freeBoardCommentDto.setIsLike(false);
+		freeBoardCommentDto.setIsMine(false);
+
 		if (freeBoardCommentDto.getIsDeleted()) {
 			return FreeBoardCommentDto.builder()
 				.id(freeBoardCommentDto.getId())
@@ -85,11 +101,49 @@ public class FreeBoardCommentService {
 				.writerId(0L)
 				.writerNickname("")
 				.isDeleted(true)
+				.isMine(false)
+				.isLike(false)
 				.createdAt(null)
 				.modifiedAt(null)
 				.build();
 		}
 		return freeBoardCommentDto;
+	}
+
+	private void populateIsMine(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
+		final boolean isMine = (userDto != null) && (freeBoardCommentDto.getWriterId().equals(userDto.getId()));
+		freeBoardCommentDto.setIsMine(isMine);
+	}
+
+	private void populateIsLike(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
+		final boolean isLike = (userDto != null) && freeBoardCommentLikeService.isLike(freeBoardCommentDto.getId(), userDto.getId());
+		freeBoardCommentDto.setIsLike(isLike);
+	}
+
+	private void populateIsMine(List<FreeBoardCommentDto> freeBoardCommentDtoList, UserDto userDto) {
+		if (userDto == null) {
+			return;
+		}
+
+		final Long userId = userDto.getId();
+
+		freeBoardCommentDtoList.forEach(
+			freeBoardCommentDto -> freeBoardCommentDto.setIsMine(freeBoardCommentDto.getWriterId().equals(userId)));
+	}
+
+	private void populateIsLike(List<FreeBoardCommentDto> freeBoardCommentDtoList, UserDto userDto) {
+		if (userDto == null) {
+			return;
+		}
+
+		final List<Long> idList = freeBoardCommentDtoList.stream()
+			.map(FreeBoardCommentDto::getId)
+			.collect(Collectors.toList());
+
+		final List<Long> likeIdList = freeBoardCommentLikeService.getLikeFreeBoardCommentIds(idList, userDto.getId());
+
+		freeBoardCommentDtoList.forEach(
+			freeBoardCommentDto -> freeBoardCommentDto.setIsLike(likeIdList.contains(freeBoardCommentDto.getId())));
 	}
 
 	public Long save(FreeBoardCommentDto freeBoardCommentDto, UserDto userDto) {
@@ -131,7 +185,8 @@ public class FreeBoardCommentService {
 			throw new NotLoginException();
 		}
 
-		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(freeBoardCommentDto.getId()).orElse(null);
+		final FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(freeBoardCommentDto.getId())
+			.orElse(null);
 
 		if (freeBoardComment == null) {
 			throw new UnExpectedException("수정하려는 댓글이 없습니다.(id=" + freeBoardCommentDto.getId() + ")");
@@ -164,14 +219,6 @@ public class FreeBoardCommentService {
 
 	public Integer countCommentCountByFreeBoardId(Long freeBoardId) {
 		return freeBoardCommentRepository.countAllByFreeBoardIdAndIsDeletedFalse(freeBoardId);
-	}
-
-	private boolean isLike(long freeBoardId, UserDto userDto) {
-		if (userDto == null) {
-			return false;
-		}
-
-		return freeBoardCommentLikeService.isLike(freeBoardId, userDto.getId());
 	}
 
 	public void like(long freeBoardId, UserDto userDto) {

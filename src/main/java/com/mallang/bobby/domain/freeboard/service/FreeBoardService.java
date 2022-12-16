@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.mallang.bobby.domain.auth.user.dto.UserDto;
+import com.mallang.bobby.domain.freeboard.dto.FreeBoardCommentDto;
 import com.mallang.bobby.domain.freeboard.dto.FreeBoardDto;
 import com.mallang.bobby.domain.freeboard.entity.FreeBoard;
 import com.mallang.bobby.domain.freeboard.repository.FreeBoardRepository;
@@ -29,7 +30,7 @@ public class FreeBoardService {
 	private final FreeBoardRepository freeBoardRepository;
 	private final FreeBoardLikeService freeBoardLikeService;
 
-	public PagingCursorDto<FreeBoardDto> get(long cursor, int size) {
+	public PagingCursorDto<FreeBoardDto> get(long cursor, int size, UserDto userDto) {
 		final List<FreeBoard> freeBoardList = freeBoardRepository.findAllOrderByIdDesc(cursor, size);
 		if (CollectionUtils.isEmpty(freeBoardList)) {
 			return PagingCursorDto.<FreeBoardDto>builder()
@@ -42,12 +43,17 @@ public class FreeBoardService {
 		final long nextCursor = freeBoardList.get(freeBoardList.size()-1).getId();
 		final boolean existNextPage = freeBoardRepository.existsByIsDeletedFalseAndIdLessThan(nextCursor);
 
+		final List<FreeBoardDto> freeBoardDtoList = freeBoardList.stream()
+			.map(this::mapToDto)
+			.collect(Collectors.toList());
+
+		populateIsMine(freeBoardDtoList, userDto);
+		populateIsLike(freeBoardDtoList, userDto);
+
 		return PagingCursorDto.<FreeBoardDto>builder()
 			.cursor(nextCursor)
 			.isLast(!existNextPage)
-			.items(freeBoardList.stream()
-				.map(freeBoard -> modelMapper.map(freeBoard, FreeBoardDto.class))
-				.collect(Collectors.toList()))
+			.items(freeBoardDtoList)
 			.build();
 	}
 
@@ -58,15 +64,72 @@ public class FreeBoardService {
 			return null;
 		}
 
-		final FreeBoardDto freeBoardDto = modelMapper.map(freeBoard, FreeBoardDto.class);
+		final FreeBoardDto freeBoardDto = mapToDto(freeBoard);
 
-		final boolean isMine = (userDto != null) && (freeBoardDto.getWriterId().equals(userDto.getId()));
-		freeBoardDto.setIsMine(isMine);
-
-		final boolean isLike = isLike(freeBoardDto.getId(), userDto);
-		freeBoardDto.setIsLike(isLike);
+		populateIsMine(freeBoardDto, userDto);
+		populateIsLike(freeBoardDto, userDto);
 
 		return freeBoardDto;
+	}
+
+	private FreeBoardDto mapToDto(FreeBoard freeBoard) {
+		final FreeBoardDto freeBoardDto = modelMapper.map(freeBoard, FreeBoardDto.class);
+
+		freeBoardDto.setIsMine(false);
+		freeBoardDto.setIsLike(false);
+
+		if (freeBoardDto.getIsDeleted()) {
+			FreeBoardDto.builder()
+				.id(freeBoardDto.getId())
+				.title("삭제된 글입니다.")
+				.contents("삭제된 글입니다.")
+				.writerNickname("")
+				.likeCount(0)
+				.isDeleted(true)
+				.isLike(false)
+				.isMine(false)
+				.createdAt(null)
+				.modifiedAt(null)
+				.build();
+		}
+
+		return freeBoardDto;
+	}
+
+	private void populateIsMine(FreeBoardDto freeBoardDto, UserDto userDto) {
+		final boolean isMine = (userDto != null) && (freeBoardDto.getWriterId().equals(userDto.getId()));
+		freeBoardDto.setIsMine(isMine);
+	}
+
+	private void populateIsLike(FreeBoardDto freeBoardDto, UserDto userDto) {
+		final boolean isLike = (userDto != null) && freeBoardLikeService.isLike(freeBoardDto.getId(), userDto.getId());
+		freeBoardDto.setIsLike(isLike);
+	}
+
+	private void populateIsMine(List<FreeBoardDto> freeBoardDtoList, UserDto userDto) {
+		if (userDto == null) {
+			return;
+		}
+
+		final Long userId = userDto.getId();
+
+		freeBoardDtoList.forEach(
+			freeBoardDto -> freeBoardDto.setIsMine(freeBoardDto.getWriterId().equals(userId)));
+	}
+
+	private void populateIsLike(List<FreeBoardDto> freeBoardDtoList, UserDto userDto) {
+		if (userDto == null) {
+			return;
+		}
+
+		final List<Long> idList = freeBoardDtoList.stream()
+			.map(FreeBoardDto::getId)
+			.collect(Collectors.toList());
+
+		final List<Long> likeIdList = freeBoardLikeService.getLikeFreeBoardIds(idList, userDto.getId());
+
+		freeBoardDtoList.forEach(
+			freeBoardDto -> freeBoardDto.setIsLike(likeIdList.contains(freeBoardDto.getId())));
 	}
 
 	public void save(FreeBoardDto freeBoardDto, UserDto userDto) {

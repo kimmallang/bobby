@@ -26,4 +26,7 @@ public class FreeBoardReplyDto {
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedAt;
+
+	private Boolean isMine;
+	private Boolean isLike;
 }

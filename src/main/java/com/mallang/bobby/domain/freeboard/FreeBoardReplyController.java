@@ -23,9 +23,10 @@ public class FreeBoardReplyController {
 	private final FreeBoardFacade freeBoardFacade;
 
 	@GetMapping("/free-board-reply/{freeBoardCommentId}")
-	public ResponseDto get(@PathVariable long freeBoardCommentId, long cursor, int size) {
+	public ResponseDto get(@PathVariable long freeBoardCommentId, long cursor, int size, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardFacade.getReplies(freeBoardCommentId, cursor, size))
+			.data(freeBoardFacade.getReplies(freeBoardCommentId, cursor, size, user))
 			.build();
 	}
 

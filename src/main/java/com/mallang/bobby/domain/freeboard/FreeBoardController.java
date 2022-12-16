@@ -23,9 +23,10 @@ public class FreeBoardController {
 	private final FreeBoardFacade freeBoardFacade;
 
 	@GetMapping("/free-board")
-	public ResponseDto get(long cursor, int size) {
+	public ResponseDto get(long cursor, int size, HttpServletRequest request) {
+		final UserDto user = (UserDto)request.getAttribute("user");
 		return ResponseDto.builder()
-			.data(freeBoardFacade.getBoards(cursor, size))
+			.data(freeBoardFacade.getBoards(cursor, size, user))
 			.build();
 	}
 
