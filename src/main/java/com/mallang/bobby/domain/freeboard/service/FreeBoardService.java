@@ -132,18 +132,17 @@ public class FreeBoardService {
 			freeBoardDto -> freeBoardDto.setIsLike(likeIdList.contains(freeBoardDto.getId())));
 	}
 
-	public void save(FreeBoardDto freeBoardDto, UserDto userDto) {
+	public Long save(FreeBoardDto freeBoardDto, UserDto userDto) {
 		try {
 			if (userDto == null || userDto.getId() == null) {
 				throw new NotLoginException();
 			}
 
 			if (freeBoardDto.getId() == null) {
-				insert(freeBoardDto, userDto);
-				return;
+				return insert(freeBoardDto, userDto);
 			}
 
-			update(freeBoardDto, userDto);
+			return update(freeBoardDto, userDto);
 		} catch (Exception e) {
 			log.error("FreeBoardService.save(): {}", e.getMessage());
 			throw e;
@@ -168,7 +167,7 @@ public class FreeBoardService {
 		freeBoardRepository.save(freeBoard);
 	}
 
-	private void insert(FreeBoardDto freeBoardDto, UserDto userDto) {
+	private Long insert(FreeBoardDto freeBoardDto, UserDto userDto) {
 		if (userDto == null) {
 			throw new NotLoginException();
 		}
@@ -182,10 +181,10 @@ public class FreeBoardService {
 		freeBoard.setWriterNickname(userDto.getNickname());
 		freeBoard.setIsDeleted(false);
 
-		freeBoardRepository.save(freeBoard);
+		return freeBoardRepository.save(freeBoard).getId();
 	}
 
-	private void update(FreeBoardDto freeBoardDto, UserDto userDto) {
+	private Long update(FreeBoardDto freeBoardDto, UserDto userDto) {
 		if (userDto == null) {
 			throw new NotLoginException();
 		}
@@ -201,7 +200,7 @@ public class FreeBoardService {
 		freeBoard.setTitle(freeBoardDto.getTitle());
 		freeBoard.setContents(freeBoardDto.getContents());
 
-		freeBoardRepository.save(freeBoard);
+		return freeBoardRepository.save(freeBoard).getId();
 	}
 
 	private boolean isLike(long freeBoardId, UserDto userDto) {

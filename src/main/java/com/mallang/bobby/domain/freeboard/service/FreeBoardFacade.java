@@ -24,8 +24,8 @@ public class FreeBoardFacade {
 		return freeBoardService.get(id, userDto);
 	}
 
-	public void saveBoard(FreeBoardDto freeBoardDto, UserDto userDto) {
-		freeBoardService.save(freeBoardDto, userDto);
+	public Long saveBoard(FreeBoardDto freeBoardDto, UserDto userDto) {
+		return freeBoardService.save(freeBoardDto, userDto);
 	}
 
 	public void removeBoard(long id, UserDto userDto) {

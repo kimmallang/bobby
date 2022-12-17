@@ -41,9 +41,11 @@ public class FreeBoardController {
 	@PostMapping("/free-board")
 	public ResponseDto save(@RequestBody FreeBoardDto freeBoardDto, HttpServletRequest request) {
 		final UserDto user = (UserDto)request.getAttribute("user");
-		freeBoardFacade.saveBoard(freeBoardDto, user);
+		final Long id = freeBoardFacade.saveBoard(freeBoardDto, user);
 
-		return ResponseDto.builder().build();
+		return ResponseDto.builder()
+			.data(id)
+			.build();
 	}
 
 	@DeleteMapping("/free-board/{id}")
